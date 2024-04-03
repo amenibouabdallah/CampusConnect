@@ -20,6 +20,14 @@ const MainRoutes = () => {
             <Route path="/account/reset/request" element={<PasswordResetMail/> } /> 
             <Route path="/account/reset/verify" element={<VerifyAccountReset/> } /> 
             <Route path="/account/reset" element={<PasswordReset/> } /> 
+            <Route path="/admin/meals" element={<MealTable/> } /> 
+            <Route path="/admin/transport" element={<TransportTable/> } /> 
+            <Route path="/meals" element={<UserMealTable/> } /> 
+            <Route path="/transport" element={<TransportTableUser/> } /> 
+            <Route path="/admin/upload" element={<UploadFileAdmin/> } /> 
+            <Route path="/upload" element={<UploadFileUser/> } /> 
+            <Route path="/profile" element={<ProfilePage/> } /> 
+            <Route path="/admin/profile" element={<AdminProfile/> } /> 
     </Routes> 
     );
 };
