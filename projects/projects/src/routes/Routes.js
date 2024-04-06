@@ -8,7 +8,14 @@ import VerifyMessage from '../views/VerifyMessage/VerifyMessage';
 import PasswordResetMail from '../views/PasswordResetMail/PasswordResetMail';
 import VerifyAccountReset from '../views/VerifyAccountReset/VerifyAccountReset';
 import PasswordReset from '../views/PasswordReset/PasswordReset';
-
+import MealTable from '../Admin/Resto-tab/Resto-tab';
+import TransportTable from '../Admin/Transport-tab/Transport-tab';
+import UserMealTable from '../views/Resto-tab/Resto-tab';
+import TransportTableUser from '../views/Transport-tab/Transport-tab';
+import UploadFileAdmin from '../Admin/Upload-file/Upload';
+import UploadFileUser from '../views/Upload-file/Upload';
+import ProfilePage from '../views/Profile/Profile';
+import AdminProfile from '../Admin/Profile/Profile';
 const MainRoutes = () => {
     return (
     <Routes> 
