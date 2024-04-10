@@ -20,6 +20,9 @@
   display: flex;
   justify-content: flex-end;
 }
+.lang-bg{
+  background-color: white !important;
+}
 /* logo style */
 .logo{
   display: flex;

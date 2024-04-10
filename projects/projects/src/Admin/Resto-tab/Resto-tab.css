@@ -8,10 +8,6 @@
     width: 90%;
     min-height: 100vh;
 }
-/* style langue dropdown */
-.dropdown-toggle{
-    background-color: #EFEFEF !important;   
-}
 /* style tableau */
 .meal-tab{
     margin-top:94px;

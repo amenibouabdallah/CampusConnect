@@ -1,11 +1,11 @@
 import React from 'react';
 import { Dropdown } from 'react-bootstrap';
-import './lang-dropdown.css'
+import './lang-dropdown.css';
 
-function LanguageDropdown({ currentLang, changeLanguage }) {
+function LanguageDropdown({ currentLang, changeLanguage, className }) {
     return (
         <Dropdown>
-            <Dropdown.Toggle variant="light" className="m-3 d-flex align-items-center justify-content-center">
+            <Dropdown.Toggle variant="light" className={`m-3 d-flex align-items-center justify-content-center ${className}`}>
                 {currentLang === 'fr' ? (
                     <>
                         <span>Français</span>

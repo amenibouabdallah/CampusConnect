@@ -8,10 +8,7 @@
     width: 90%;
     min-height: 100vh;
 }
-/* style langue dropdown */
-.dropdown-toggle{
-    background-color: #EFEFEF !important;   
-}
+
 /* style tableau */
 .trans-input {
     width: 90%;
@@ -38,10 +35,10 @@ th{
     color: #2D60B1 !important;
     height: 45px !important;
 }
-.table>thead {
+.table2>thead {
     vertical-align: middle;
 }
-.table {
+.table2 {
     vertical-align: middle;
 }
 /* apply border radius to the corners */
@@ -72,7 +69,7 @@ table {
     flex-direction: row-reverse;
     justify-content: space-around;
 }
-table.table {
+.table2 {
     border-collapse: collapse;
     width: 80%;
     margin: 30px;
@@ -81,16 +78,16 @@ table.table {
     margin-top: 94px;
 }
 
-table.table th,
-table.table td {
+.table2 th,
+.table2 td {
     border: 1px solid black;
     padding: 8px;
     background-color: #EFEFEF !important;
 
 }
 
-table.table tr:first-child th:last-child,
-table.table td:last-child {
+.table2 tr:first-child th:last-child,
+.table2 td:last-child {
     border-right: none; /* Enlever la bordure de droite pour la dernière colonne */
     border-top: none; /* Enlever la bordure du haut pour la colonne des boutons */
     border-bottom: none; /* Enlever la bordure du bas pour la colonne des boutons */

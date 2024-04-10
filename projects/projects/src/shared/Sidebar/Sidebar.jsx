@@ -18,13 +18,13 @@ function Sidebar() {
                 </Link>
             </div>
             <div className='nav-items'>
-                <Link className='nav-item' to="/admin/profile">
+                <Link className='nav-item' to="/admin">
 
                     <img className='sidebar-icon' src={adminprofile} alt="" />
 
                     <p className='sidebar-item'>Profil</p>
                 </Link>
-                <Link className='nav-item' to="/admin/meals">
+                <Link className='nav-item' to="/admin/users">
 
                     <img className='sidebar-icon' src={Users} alt="" />
 

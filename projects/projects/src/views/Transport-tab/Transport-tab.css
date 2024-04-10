@@ -1,11 +1,11 @@
-table.table1 th,
-table.table1 td {
+.table1 th,
+.table1 td {
     border: 1px solid black;
     padding: 8px;
     background-color: #EFEFEF !important;
 
 }
-table.table1 {
+.table1 {
     border-collapse: collapse;
     width: 80%;
     margin: 30px;

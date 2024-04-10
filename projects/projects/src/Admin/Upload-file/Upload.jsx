@@ -62,7 +62,7 @@ function UploadFileAdmin() {
                         <h2>Dépôt Fichiers</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
                     </div>
                 </div>
                 <div className='d-flex justify-content-center mb-5'>

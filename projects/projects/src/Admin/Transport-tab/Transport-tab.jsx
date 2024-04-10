@@ -91,13 +91,13 @@ function TransportTable() {
                         <h2>Horaires transports</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
                     </div>
 
                 </div>
                 <div className='d-flex justify-content-center'>
                     <form className='d-flex flex-column align-items-center justify-content-center' onSubmit={handleSubmit}>
-                        <table className="table">
+                        <table className="table2">
                             {/* Table header */}
                             <thead>
                                 {/* Table header rows */}

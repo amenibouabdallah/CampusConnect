@@ -16,6 +16,7 @@ import UploadFileAdmin from '../Admin/Upload-file/Upload';
 import UploadFileUser from '../views/Upload-file/Upload';
 import ProfilePage from '../views/Profile/Profile';
 import AdminProfile from '../Admin/Profile/Profile';
+import UsersTable from '../Admin/Users-tab/Users-tab';
 const MainRoutes = () => {
     return (
     <Routes> 
@@ -34,7 +35,8 @@ const MainRoutes = () => {
             <Route path="/admin/upload" element={<UploadFileAdmin/> } /> 
             <Route path="/upload" element={<UploadFileUser/> } /> 
             <Route path="/profile" element={<ProfilePage/> } /> 
-            <Route path="/admin/profile" element={<AdminProfile/> } /> 
+            <Route path="/admin" element={<AdminProfile/> } /> 
+            <Route path="/admin/users" element={<UsersTable/> } /> 
     </Routes> 
     );
 };

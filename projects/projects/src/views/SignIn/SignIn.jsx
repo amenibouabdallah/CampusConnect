@@ -25,12 +25,12 @@ function SignIn() {
         setPassword(e.target.value);
     };
 
-    const handleSubmit =async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
-            const response = await axios.post('http://localhost:3000/auth/signin',{email:email, password:password});
+        try {
+            const response = await axios.post('http://localhost:3000/auth/signin', { email: email, password: password });
             console.log("Response:", response.data);
-        }catch(error){
+        } catch (error) {
             console.error('Error:', error.response.data.message);
             setShowAlert(true);
         }
@@ -47,7 +47,7 @@ function SignIn() {
             <div className='left-part'>
                 <div className='logolang'>
                     <div className='lang'>
-                        <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg" currentLang={currentLang} changeLanguage={changeLanguage} />
                     </div>
                     <div className='logo'>
                         <img className='nobg-logo' src={logo} alt="" />

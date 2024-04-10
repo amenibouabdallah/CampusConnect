@@ -18,7 +18,7 @@ function SignUp() {
     const [password, setPassword] = useState('');
     const [userType, setUserType] = useState('');
     const [university, setUniversity] = useState('');
-    const [a,b]= useState([{}])
+    const [a, b] = useState([{}])
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
@@ -40,12 +40,12 @@ function SignUp() {
         // Check if email format is correct (you can use a regex for this)
         if (/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(email)) {
             try {
-                const response = await axios.post('http://localhost:3000/auth/signup', { email, password, userType, university});
+                const response = await axios.post('http://localhost:3000/auth/signup', { email, password, userType, university });
                 console.log('Response:', response.data);
                 localStorage.setItem('email', email);
                 // Navigate to the '/register/account' route only after successful signup
                 navigate('/register/account');
-                
+
             } catch (error) {
                 console.error('Error signing up:', error.response.data.message);
                 // Handle errors, e.g., display an error message to the user
@@ -87,12 +87,12 @@ function SignUp() {
                             required
                         />
                         <select className='login-input form-select' value={userType} onChange={handleUserTypeChange} required>
-                            <option value="">Type</option>
+                            <option value="" disabled>Type</option>
                             <option value="student">Etudiant</option>
                             <option value="teacher">Enseignant</option>
                         </select>
                         <select className='login-input form-select' value={university} onChange={handleUniversityChange} required>
-                            <option value="">Université</option>
+                            <option value="" disabled>Université</option>
                             <option value="FST">FST</option>
                             <option value="ENIT">ENIT</option>
                             <option value="FSEG">FSEG</option>
