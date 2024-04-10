@@ -47,3 +47,6 @@ a.nav.active::after {
     height: 5px;
     background-color: #2D60B1; /* Couleur du soulignement */
 }
+.logout{
+    margin-right: 4%;
+}
