@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
+import { useTranslation } from 'react-i18next';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 
 const AdminProfile = () => {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        // Add code here to change the language of the application
-    };
     const user = {
         fullName: 'Sami Samsoum',
         email: 'sami@gmail.com',
         password: '******',
     };
-
+    const { t } = useTranslation();
     // États pour gérer les champs du formulaire
     const [fullName, setFullName] = useState(user.fullName);
     const [email, setEmail] = useState(user.email);
@@ -66,10 +61,10 @@ const AdminProfile = () => {
             <div className='resto-tab'>
                 <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
                     <div className='title'>
-                        <h2>Profil</h2>
+                        <h2>{t('profile.title')}</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg-gris" />
                     </div>
                 </div>
                 <div className='d-flex justify-content-center'>
@@ -81,11 +76,11 @@ const AdminProfile = () => {
                                         <label className='prof-label'>
                                             <div className='prof-element'>
                                                 <div className='profile-label'>
-                                                    Adresse Mail:
+                                                    {t('profile.email')}:
                                                 </div>
                                                 <div>
                                                     <p className='current'>{email}</p>
-                                                    <p className='new-label'>Nouveau mail:</p>
+                                                    <p className='new-label'>{t('profile.newEmail')}:</p>
                                                     <input className='profile-input' type="email" value={newEmail} onChange={handleEmailChange} />
                                                 </div>
                                             </div>
@@ -94,13 +89,13 @@ const AdminProfile = () => {
                                         <label className='prof-label'>
                                             <div className='prof-element'>
                                                 <div className='profile-label'>
-                                                    Mot de passe:
+                                                    {t('profile.password')}:
                                                 </div>
                                                 <div>
                                                     <p className='current'>{password}</p>
-                                                    <p className='new-label'>Nouveau mot de passe:</p>
+                                                    <p className='new-label'>{t('profile.newPassword')}:</p>
                                                     <input className='profile-input' type="password" value={newPassword} onChange={handlePasswordChange} />
-                                                    <p className='new-label'> Confirmer mot de passe:</p>
+                                                    <p className='new-label'> {t('profile.confirmPassword')}:</p>
                                                     <input className='profile-input' type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
                                                 </div>
                                             </div>
@@ -113,8 +108,8 @@ const AdminProfile = () => {
                                         setNewEmail('');
                                         setNewPassword('');
                                         setConfirmPassword('');
-                                    }}>Annuler</button>
-                                    <button className='save-btn1' type="submit">Enregistrer</button>
+                                    }}>{t('profile.cancel')}</button>
+                                    <button className='save-btn1' type="submit">{t('profile.save')}</button>
                                 </div>
                             </div>
 

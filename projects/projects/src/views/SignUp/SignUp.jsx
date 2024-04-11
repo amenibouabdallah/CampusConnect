@@ -1,24 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown'
-import logo from '../../assets/images/noBg-logo.png'
-import campus from '../../assets/images/Campus.jpg'
-import '../SignIn-SignUp.css'
-import axios from 'axios'
+import { useTranslation } from 'react-i18next';
+import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
+import logo from '../../assets/images/noBg-logo.png';
+import campus from '../../assets/images/Campus.jpg';
+import '../SignIn-SignUp.css';
+import axios from 'axios';
 
 
 function SignUp() {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
+    const { t } = useTranslation();
 
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        //add code here to change the language of the application
-    };
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userType, setUserType] = useState('');
     const [university, setUniversity] = useState('');
-    const [a, b] = useState([{}])
+    const [a, b] = useState([{}]);
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
@@ -61,13 +58,13 @@ function SignUp() {
             <div className='left-part'>
                 <div className='logolang'>
                     <div className='lang'>
-                        <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg" />
                     </div>
                     <div className='logo'>
                         <img className='nobg-logo' src={logo} alt="" />
                     </div>
                 </div>
-                <h1 className='title'>S'inscrire !</h1>
+                <h1 className='title'>{t('signUp.welcome')}</h1>
                 <div>
                     <form onSubmit={handleSubmit} className='login-form'>
                         <input
@@ -75,7 +72,7 @@ function SignUp() {
                             type="email"
                             value={email}
                             onChange={handleEmailChange}
-                            placeholder="Email"
+                            placeholder={t('signUp.emailPlaceholder')}
                             required
                         />
                         <input
@@ -83,21 +80,21 @@ function SignUp() {
                             type="password"
                             value={password}
                             onChange={handlePasswordChange}
-                            placeholder="Mot de passe"
+                            placeholder={t('signUp.passwordPlaceholder')}
                             required
                         />
                         <select className='login-input form-select' value={userType} onChange={handleUserTypeChange} required>
-                            <option value="" disabled>Type</option>
-                            <option value="student">Etudiant</option>
-                            <option value="teacher">Enseignant</option>
+                            <option value="" disabled>{t('signUp.userType')}</option>
+                            <option value="student">{t('signUp.student')}</option>
+                            <option value="teacher">{t('signUp.teacher')}</option>
                         </select>
                         <select className='login-input form-select' value={university} onChange={handleUniversityChange} required>
-                            <option value="" disabled>Université</option>
-                            <option value="FST">FST</option>
-                            <option value="ENIT">ENIT</option>
-                            <option value="FSEG">FSEG</option>
+                            <option value="" disabled>{t('signUp.university')}</option>
+                            <option value="FST">{t('signUp.fst')}</option>
+                            <option value="ENIT">{t('signUp.enit')}</option>
+                            <option value="FSEG">{t('signUp.fseg')}</option>
                         </select>
-                        <button className='submit-button' type="submit">S'inscrire </button>
+                        <button className='submit-button' type="submit">{t('signUp.signUpButton')}</button>
                     </form>
                 </div>
             </div>
@@ -108,4 +105,4 @@ function SignUp() {
     )
 }
 
-export default SignUp
+export default SignUp;

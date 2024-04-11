@@ -50,3 +50,6 @@ a.nav.active::after {
 .logout{
     margin-right: 4%;
 }
+.lang-bg-gris{
+    background-color: #efefef;
+}

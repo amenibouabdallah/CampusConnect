@@ -1,15 +1,18 @@
+// Composant UploadFileUser
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import NavigationMenu from '../../shared/Navbar/Navbar';
 import upload from '../../assets/images/upload-img.png'
 import './Upload.css'
 
 function UploadFileUser() {
+    const { t } = useTranslation();
 
     const [fullName, setFullName] = useState('');
-
     const handleNameChange = (e) => {
         setFullName(e.target.value);
     };
+
     const [DocDepose, setDocDepose] = useState(null);
     const [fileName, setFileName] = useState('');
     const handleFileChange = (e) => {
@@ -17,16 +20,17 @@ function UploadFileUser() {
         setDocDepose(file);
         setFileName(file ? file.name : '');
     };
-    const [selectedDate, setSelectedDate] = useState('');
 
+    const [selectedDate, setSelectedDate] = useState('');
     const handleDateChange = (event) => {
         setSelectedDate(event.target.value);
     };
-    const [docType, setDocType] = useState('');
 
+    const [docType, setDocType] = useState('');
     const handleDocTypeChange = (event) => {
         setDocType(event.target.value);
     };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!DocDepose) {
@@ -58,14 +62,14 @@ function UploadFileUser() {
                             type="text"
                             value={fullName}
                             onChange={handleNameChange}
-                            placeholder="Nom du document"
+                            placeholder={t('uploadFile.fullNamePlaceholder')}
                             required
                         />
                         <select className='login-input form-select upload' value={docType} onChange={handleDocTypeChange} required>
-                            <option value="" disabled>Type</option>
-                            <option value="grades">Relevé de notes</option>
-                            <option value="announcement">Annonce</option>
-                            <option value="schedule">Emploi du temps</option>
+                            <option value="" disabled>{t('uploadFile.docTypePlaceholder')}</option>
+                            <option value="grades">{t('uploadFile.gradeReport')}</option>
+                            <option value="announcement">{t('uploadFile.announcement')}</option>
+                            <option value="schedule">{t('uploadFile.schedule')}</option>
                         </select>
                         <input
                             className='login-input upload cal'
@@ -84,7 +88,7 @@ function UploadFileUser() {
                                 required
                             />
 
-                            <span className="file-input-label upload"> <p className='upload-text'>{fileName ? `Nom du fichier : ${fileName}` : 'Merci de joindre le document'}</p> <br /> <svg id="Group_8205" data-name="Group 8205" xmlns="http://www.w3.org/2000/svg" width="55.284" height="48.954" viewBox="0 0 55.284 48.954">
+                            <span className="file-input-label upload"> <p className='upload-text'>{fileName ? `${t('uploadFile.fileName')}: ${fileName}` : t('uploadFile.uploadText')}</p> <br /> <svg id="Group_8205" data-name="Group 8205" xmlns="http://www.w3.org/2000/svg" width="55.284" height="48.954" viewBox="0 0 55.284 48.954">
                                 <g id="Group_8204" data-name="Group 8204">
                                     <g id="Group_8203" data-name="Group 8203">
                                         <circle id="Ellipse_18" data-name="Ellipse 18" cx="3.798" cy="3.798" r="3.798" transform="translate(17.039 12.08)" fill="#000" opacity="0.5" />
@@ -94,18 +98,11 @@ function UploadFileUser() {
                                 </g>
                             </svg></span>
                         </label>
-                        <button className='submit-button' type="submit">Confirmer</button>
+                        <button className='submit-button' type="submit">{t('uploadFile.submit')}</button>
                     </form>
                 </div>
-
             </div>
         </div>
-
-
-
-
-
-
     );
 }
 

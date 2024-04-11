@@ -5,15 +5,11 @@ import Sidebar from '../../shared/Sidebar/Sidebar';
 import plus from '../../assets/images/plus.png';
 import trash from '../../assets/images/trash.png';
 import { useTransportContext } from '../../shared/TransportContext'; // Import du contexte
+import { useTranslation } from 'react-i18next'; // Import du hook de traduction
 
 function TransportTable() {
+    const { t } = useTranslation(); // Hook de traduction
     const { transports, addTransport, removeTransport } = useTransportContext(); // Utilisation du contexte
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        // Add code here to change the language of the application
-    };
 
     const [data, setData] = useState(JSON.parse(localStorage.getItem('transportData')) || [{ id: 1, ligne: '', destination: '', premierDepartStation: '', premierDepartBanlieue: '', dernierDepartStation: '', dernierDepartBanlieue: '', frequence: '', isDirty: false }]);
     const [nextId, setNextId] = useState(2);
@@ -88,33 +84,33 @@ function TransportTable() {
             <div className='resto-tab'>
                 <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
                     <div className='title'>
-                        <h2>Horaires transports</h2>
+                        <h2>{t('transportTable.title')}</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg-gris" />
                     </div>
 
                 </div>
-                <div className='d-flex justify-content-center'>
-                    <form className='d-flex flex-column align-items-center justify-content-center' onSubmit={handleSubmit}>
+                <div className='d-flex justify-content-center '>
+                    <form className='users-tab-wrapper1 trans-form' onSubmit={handleSubmit}>
                         <table className="table2">
                             {/* Table header */}
                             <thead>
                                 {/* Table header rows */}
                                 <tr>
                                     {/* Table header cells */}
-                                    <th rowSpan="2">Ligne</th>
-                                    <th rowSpan="2">Destination</th>
-                                    <th colSpan="2">Premier départ</th>
-                                    <th colSpan="2">Dernier départ</th>
-                                    <th rowSpan="2">Fréquence</th>
+                                    <th rowSpan="2">{t('transportTable.line')}</th>
+                                    <th rowSpan="2">{t('transportTable.destination')}</th>
+                                    <th colSpan="2">{t('transportTable.firstDeparture')}</th>
+                                    <th colSpan="2">{t('transportTable.lastDeparture')}</th>
+                                    <th rowSpan="2">{t('transportTable.frequency')}</th>
                                     <th rowSpan="2"></th>
                                 </tr>
                                 <tr>
-                                    <th>Vers station</th>
-                                    <th>Vers banlieue</th>
-                                    <th>Vers station</th>
-                                    <th>Vers banlieue</th>
+                                    <th>{t('transportTable.toStation')}</th>
+                                    <th>{t('transportTable.toSuburb')}</th>
+                                    <th>{t('transportTable.toStation')}</th>
+                                    <th>{t('transportTable.toSuburb')}</th>
                                 </tr>
                             </thead>
                             {/* Table body */}
@@ -143,11 +139,11 @@ function TransportTable() {
                             </tbody>
                         </table>
                         <div className="alert alert-danger" role="alert" style={{ display: isSubmitted && !isFormValid() ? 'block' : 'none' }}>
-                            Veuillez remplir tous les champs.
+                            {t('form.errorMessage')}
                         </div>
                         <div className='sub-button'>
                             <button type="submit" className="submit">
-                                Valider
+                                {t('form.submitButton')}
                             </button>
                             <div></div>
                         </div>

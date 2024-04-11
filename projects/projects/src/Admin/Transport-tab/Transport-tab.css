@@ -37,6 +37,21 @@ th{
 }
 .table2>thead {
     vertical-align: middle;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
+}
+.users-tab-wrapper1 {
+    max-height: 700px; /* Hauteur maximale du conteneur du tableau */
+    overflow-y: auto; /* Activer le défilement vertical si nécessaire */
+    position: relative; /* Position relative pour positionner correctement le thead */
+    margin-top: 20px;
+}
+.trans-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .table2 {
     vertical-align: middle;
@@ -70,12 +85,11 @@ table {
     justify-content: space-around;
 }
 .table2 {
-    border-collapse: collapse;
+    border-collapse: separate;
     width: 80%;
     margin: 30px;
     box-shadow: none;
     border: black;
-    margin-top: 94px;
 }
 
 .table2 th,
@@ -106,6 +120,7 @@ table {
     width: 40px; /* ou la taille souhaitée */
     height: 40px; /* ou la taille souhaitée */
 }
+
 
 
 

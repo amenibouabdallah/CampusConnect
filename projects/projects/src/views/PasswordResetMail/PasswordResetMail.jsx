@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown'
 import logo from '../../assets/images/noBg-logo.png'
 import campus from '../../assets/images/Campus.jpg'
@@ -7,14 +8,10 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 function PasswordResetMail() {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
+    const { t } = useTranslation();
     const [showAlert, setShowAlert] = useState(false);
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        //add code here to change the language of the application
-    };
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -22,12 +19,12 @@ function PasswordResetMail() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
-            const response = await axios.post('http://localhost:3000/auth/forgot-password',{email:email});
+        try {
+            const response = await axios.post('http://localhost:3000/auth/forgot-password', { email: email });
             console.log("Response:", response.data);
             localStorage.setItem('email', email);
             navigate("/account/reset/verify");
-        }catch(error){
+        } catch (error) {
             console.error('Error:', error.response.data.message);
             setShowAlert(true);
         }
@@ -38,13 +35,13 @@ function PasswordResetMail() {
             <div className='left-part'>
                 <div className='logolang'>
                     <div className='lang'>
-                        <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg" />
                     </div>
                     <div className='logo'>
                         <img className='nobg-logo' src={logo} alt="" />
                     </div>
                 </div>
-                <h1 className='title'>Rénitialiser le mot de passe !</h1>
+                <h1 className='title'>{t('passwordReset.welcome')}</h1>
                 <div >
                     <form onSubmit={handleSubmit} className='login-form'>
                         <input
@@ -52,11 +49,12 @@ function PasswordResetMail() {
                             type="email"
                             value={email}
                             onChange={handleEmailChange}
-                            placeholder="Email"
+                            placeholder={t('login.emailPlaceholder')}
                             required
                         />
-                        <button className='submit-button' type="submit">Récupérer </button>
+                        <button className='submit-button' type="submit">{t('passwordReset.validate')}</button>
                     </form>
+                    {showAlert && <p className='error-message'>{t('passwordReset.passwordsDoNotMatch')}</p>}
                 </div>
             </div>
             <div className='right-part'>

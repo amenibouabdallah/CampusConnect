@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
+import { useTranslation } from 'react-i18next';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 import upload from '../../assets/images/upload-img.png'
 import './Upload.css'
 
 function UploadFileAdmin() {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        // Add code here to change the language of the application
-    };
+    const { t } = useTranslation();
     const [fullName, setFullName] = useState('');
 
     const handleNameChange = (e) => {
@@ -48,9 +44,6 @@ function UploadFileAdmin() {
         console.log('Nom du fichier:', fileName);
     };
 
-
-
-
     return (
         <div className='d-flex align-items-center align-content-center'>
             <div className='sidebar'>
@@ -59,10 +52,10 @@ function UploadFileAdmin() {
             <div className='resto-tab'>
                 <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
                     <div className='title'>
-                        <h2>Dépôt Fichiers</h2>
+                        <h2>{t('uploadFile.title')}</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg-gris" />
                     </div>
                 </div>
                 <div className='d-flex justify-content-center mb-5'>
@@ -76,14 +69,14 @@ function UploadFileAdmin() {
                                 type="text"
                                 value={fullName}
                                 onChange={handleNameChange}
-                                placeholder="Nom du document"
+                                placeholder={t('uploadFile.fullNamePlaceholder')}
                                 required
                             />
                             <select className='login-input form-select upload' value={docType} onChange={handleDocTypeChange} required>
-                                <option value="" disabled>Type</option>
-                                <option value="grades">Relevé de notes</option>
-                                <option value="announcement">Annonce</option>
-                                <option value="schedule">Emploi du temps</option>
+                                <option value="" disabled>{t('uploadFile.docTypePlaceholder')}</option>
+                                <option value="grades">{t('uploadFile.gradeReport')}</option>
+                                <option value="announcement">{t('uploadFile.announcement')}</option>
+                                <option value="schedule">{t('uploadFile.schedule')}</option>
                             </select>
                             <input
                                 className='login-input upload cal'
@@ -102,7 +95,7 @@ function UploadFileAdmin() {
                                     required
                                 />
 
-                                <span className="file-input-label upload"> <p className='upload-text'>{fileName ? `Nom du fichier : ${fileName}` : 'Merci de joindre le document'}</p> <br /> <svg id="Group_8205" data-name="Group 8205" xmlns="http://www.w3.org/2000/svg" width="55.284" height="48.954" viewBox="0 0 55.284 48.954">
+                                <span className="file-input-label upload"> <p className='upload-text'>{fileName ? `${t('uploadFile.fileName')}: ${fileName}` : t('uploadFile.uploadText')}</p> <br /> <svg id="Group_8205" data-name="Group 8205" xmlns="http://www.w3.org/2000/svg" width="55.284" height="48.954" viewBox="0 0 55.284 48.954">
                                     <g id="Group_8204" data-name="Group 8204">
                                         <g id="Group_8203" data-name="Group 8203">
                                             <circle id="Ellipse_18" data-name="Ellipse 18" cx="3.798" cy="3.798" r="3.798" transform="translate(17.039 12.08)" fill="#000" opacity="0.5" />
@@ -112,7 +105,7 @@ function UploadFileAdmin() {
                                     </g>
                                 </svg></span>
                             </label>
-                            <button className='submit-button' type="submit">Confirmer</button>
+                            <button className='submit-button' type="submit">{t('uploadFile.submit')}</button>
                         </form>
                     </div>
 

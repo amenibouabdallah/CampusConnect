@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 import trash from '../../assets/images/trash.png';
@@ -31,7 +32,7 @@ const fakeData = [
 
 
 const DocsTable = () => {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortColumn, setSortColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
@@ -43,12 +44,6 @@ const DocsTable = () => {
     const [showRejectConfirmation, setShowRejectConfirmation] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [docIdToConfirm, setDocIdToConfirm] = useState(null);
-
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        // Add code here to change the language of the application
-    };
 
     const handleActionConfirmation = (action, id) => {
         if (action === 'accept') {
@@ -133,10 +128,10 @@ const DocsTable = () => {
             <div className='resto-tab'>
                 <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
                     <div className='title'>
-                        <h2>Liste des documents</h2>
+                        <h2>{t('docsTab.title')}</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg-gris" />
                     </div>
                 </div>
                 {/* Search and Total docs */}
@@ -145,7 +140,7 @@ const DocsTable = () => {
                         <input
                             className='recherche'
                             type="text"
-                            placeholder="Rechercher..."
+                            placeholder={t('docsTab.searchBarPlaceholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -155,7 +150,7 @@ const DocsTable = () => {
                     </div>
 
                     <div>
-                        <span className='nb-total'>Nombre total de documents : {sortedData.length}</span>
+                        <span className='nb-total'>{t('docsTab.totalDocuments', { count: sortedData.length })}</span>
                     </div>
                 </div>
                 {/* Filters */}
@@ -189,15 +184,15 @@ const DocsTable = () => {
 
                     )}</button>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                        <option value="All" >Tous les statuts</option>
-                        <option value="Pending">En attente</option>
-                        <option value="Active">Approuvé</option>
+                        <option value="All">{t('docsTab.filters.allStatus')}</option>
+                        <option value="Pending">{t('docsTab.filters.pending')}</option>
+                        <option value="Active">{t('docsTab.filters.approved')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-                        <option value="All" >Tous les types</option>
-                        <option value="Relevé des notes">Relevé des notes</option>
-                        <option value="Emploi du temps">Emploi du temps</option>
-                        <option value="Annonce">Annonce</option>
+                        <option value="All">{t('docsTab.filters.allTypes')}</option>
+                        <option value="Relevé des notes">{t('docsTab.filters.gradeReport')}</option>
+                        <option value="Emploi du temps">{t('docsTab.filters.schedule')}</option>
+                        <option value="Annonce">{t('docsTab.filters.announcement')}</option>
                     </select>
                 </div>
                 {/* Table */}
@@ -206,13 +201,13 @@ const DocsTable = () => {
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Nom du document</th>
-                                <th>Date de création</th>
-                                <th>Date de dépôt</th>
-                                <th>Statut du document</th>
-                                <th>Type du document</th>
-                                <th>Déposé par</th>
-                                <th>Gestion des documents</th>
+                                <th>{t('docsTab.documentName')}</th>
+                                <th>{t('docsTab.creationDate')}</th>
+                                <th>{t('docsTab.submissionDate')}</th>
+                                <th>{t('docsTab.documentStatus')}</th>
+                                <th>{t('docsTab.documentType')}</th>
+                                <th>{t('docsTab.submittedBy')}</th>
+                                <th>{t('docsTab.documentManagement')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -252,15 +247,15 @@ const DocsTable = () => {
                             <div className="confirmation-popup d-flex flex-column align-items-center ">
                                 <div className='d-flex flex-row-reverse justify-content-center align-items-center'>
                                     <div className='quest'>
-                                        <p className='conf-text'>{`Êtes-vous sûr de vouloir approuver ce document ?`}</p>
+                                        <p className='conf-text'>{t('docsTab.popups.acceptMsg')}</p>
                                     </div>
                                     <div className='confirmation-img'>
                                         <img className='conf-img' src={approve} alt="" />
                                     </div>
                                 </div>
                                 <div className="confirmation-buttons d-flex flex-row-reverse justify-content-center">
-                                    <button className='conf-btn' onClick={() => handleConfirmAction('accept')}>Approuver</button>
-                                    <button className='ann-btn' onClick={handleCancelAction}>Annuler</button>
+                                    <button className='conf-btn' onClick={() => handleConfirmAction('accept')}>{t('docsTab.popups.acceptBtn')}</button>
+                                    <button className='ann-btn' onClick={handleCancelAction}>{t('docsTab.popups.cancelBtn')}</button>
                                 </div>
                             </div>
                         </div>
@@ -270,15 +265,15 @@ const DocsTable = () => {
                             <div className="confirmation-popup d-flex flex-column align-items-center ">
                                 <div className='d-flex flex-row-reverse justify-content-center align-items-center'>
                                     <div className='quest'>
-                                        <p className='conf-text'>{`Êtes-vous sûr de vouloir refuser ce document ?`}</p>
+                                        <p className='conf-text'>{t('docsTab.popups.rejectMsg')}</p>
                                     </div>
                                     <div className='confirmation-img'>
                                         <img className='conf-img' src={reject} alt="" />
                                     </div>
                                 </div>
                                 <div className="confirmation-buttons d-flex flex-row-reverse justify-content-center">
-                                    <button className='conf-btn' onClick={() => handleConfirmAction('reject')}>Rejeter</button>
-                                    <button className='ann-btn' onClick={handleCancelAction}>Annuler</button>
+                                    <button className='conf-btn' onClick={() => handleConfirmAction('reject')}>{t('docsTab.popups.rejectBtn')}</button>
+                                    <button className='ann-btn' onClick={handleCancelAction}>{t('docsTab.popups.cancelBtn')}</button>
                                 </div>
                             </div>
                         </div>
@@ -288,19 +283,20 @@ const DocsTable = () => {
                             <div className="confirmation-popup d-flex flex-column align-items-center ">
                                 <div className='d-flex flex-row-reverse justify-content-center align-items-center'>
                                     <div className='quest'>
-                                        <p className='conf-text'>{`Êtes-vous sûr de vouloir supprimer ce document ?`}</p>
+                                        <p className='conf-text'>{t('docsTab.popups.deleteMsg')}</p>
                                     </div>
                                     <div className='confirmation-img'>
                                         <img className='conf-img' src={supprimer} alt="" />
                                     </div>
                                 </div>
                                 <div className="confirmation-buttons d-flex flex-row-reverse justify-content-center">
-                                    <button className='conf-btn' onClick={() => handleConfirmAction('delete')}>Supprimer</button>
-                                    <button className='ann-btn' onClick={handleCancelAction}>Annuler</button>
+                                    <button className='conf-btn' onClick={() => handleConfirmAction('delete')}>{t('docsTab.popups.deleteBtn')}</button>
+                                    <button className='ann-btn' onClick={handleCancelAction}>{t('docsTab.popups.cancelBtn')}</button>
                                 </div>
                             </div>
                         </div>
                     )}
+
 
                 </div>
             </div>

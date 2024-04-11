@@ -1,21 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown'
-import logo from '../../assets/images/noBg-logo.png'
-import campus from '../../assets/images/Campus.jpg'
-import '../SignIn-SignUp.css'
+import { useTranslation } from 'react-i18next';
+import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
+import logo from '../../assets/images/noBg-logo.png';
+import campus from '../../assets/images/Campus.jpg';
+import '../SignIn-SignUp.css';
 import axios from 'axios';
 
 function SignIn() {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
+    const { t } = useTranslation();
     const [showAlert, setShowAlert] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        //add code here to change the language of the application
-    };
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -36,24 +32,23 @@ function SignIn() {
         }
     };
 
-
     return (
         <div className='login-view'>
             {showAlert && (
                 <div className="alert alert-danger" role="alert">
-                    Identifiant ou mot de passe incorrect.
+                    {t('login.incorrectCredentials')}
                 </div>
             )}
             <div className='left-part'>
                 <div className='logolang'>
                     <div className='lang'>
-                        <LanguageDropdown className="lang-bg" currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg" />
                     </div>
                     <div className='logo'>
                         <img className='nobg-logo' src={logo} alt="" />
                     </div>
                 </div>
-                <h1 className='title'>Bienvenue !</h1>
+                <h1 className='title'>{t('login.welcome')}</h1>
                 <div >
                     <form onSubmit={handleSubmit} className='login-form'>
                         <input
@@ -61,7 +56,7 @@ function SignIn() {
                             type="email"
                             value={email}
                             onChange={handleEmailChange}
-                            placeholder="Email"
+                            placeholder={t('login.emailPlaceholder')}
                             required
                         />
                         <input
@@ -69,16 +64,16 @@ function SignIn() {
                             type="password"
                             value={password}
                             onChange={handlePasswordChange}
-                            placeholder="Mot de passe"
+                            placeholder={t('login.passwordPlaceholder')}
                             required
                         />
                         <div className='lost-password'>
-                            <p className='mdp'>Mot de passe oublié ?</p>
-                            <Link className='mdp' to="/account/reset/request">Rénitialiser le mot de passe</Link>
+                            <p className='mdp'>{t('login.forgotPassword')}</p>
+                            <Link className='mdp' to="/account/reset/request">{t('login.resetPassword')}</Link>
                         </div>
-                        <button className='submit-button' type="submit">Se Connecter </button>
+                        <button className='submit-button' type="submit">{t('login.signIn')}</button>
                         <div className='signup'>
-                            <span className='mdp'>Vous n’avez pas de compte ? <Link className='mdp' to="/register">Créer un compte</Link></span>
+                            <span className='mdp'>{t('login.noAccount')} <Link className='mdp' to="/register">{t('login.createAccount')}</Link></span>
                         </div>
                     </form>
                 </div>
@@ -90,4 +85,4 @@ function SignIn() {
     )
 }
 
-export default SignIn
+export default SignIn;

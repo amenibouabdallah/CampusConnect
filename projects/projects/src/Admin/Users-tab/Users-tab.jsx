@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
+import { useTranslation } from 'react-i18next';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 import trash from '../../assets/images/trash.png';
 import refuse from '../../assets/images/Refuser.png';
@@ -10,26 +11,25 @@ import approve from '../../assets/images/approve.png';
 import supprimer from '../../assets/images/supprimer.png';
 import reject from '../../assets/images/reject.png';
 import profile from '../../assets/images/profile.png';
-
 import './Users-tab.css';
 
 const fakeData = [
-    { id: 1, name: 'John Doe', status: 'Pending', userType: 'Student', lastVisit: '2024-04-09T10:30:00', profilePicture: profile, email: 'john.doe@example.com', section: 'A', department: 'Computer Science' },
-    { id: 2, name: 'Jane Smith', status: 'Active', userType: 'Teacher', lastVisit: '2024-04-08T15:45:00', profilePicture: profile, email: 'jane.smith@example.com', section: 'B', department: 'Physics' },
-    { id: 3, name: 'Alice Johnson', status: 'Active', userType: 'Student', lastVisit: '2024-04-07T09:20:00', profilePicture: profile, email: 'alice.johnson@example.com', section: 'A', department: 'Biology' },
-    { id: 4, name: 'Bob Brown', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-06T11:55:00', profilePicture: profile, email: 'bob.brown@example.com', section: 'C', department: 'Chemistry' },
-    { id: 5, name: 'Eve Wilson', status: 'Active', userType: 'Student', lastVisit: '2024-04-05T16:30:00', profilePicture: profile, email: 'eve.wilson@example.com', section: 'B', department: 'Mathematics' },
-    { id: 6, name: 'Alex Miller', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-04T13:10:00', profilePicture: profile, email: 'alex.miller@example.com', section: 'A', department: 'Engineering' },
-    { id: 7, name: 'David Clark', status: 'Active', userType: 'Student', lastVisit: '2024-04-03T14:25:00', profilePicture: profile, email: 'david.clark@example.com', section: 'C', department: 'History' },
-    { id: 8, name: 'Sarah White', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-02T10:40:00', profilePicture: profile, email: 'sarah.white@example.com', section: 'B', department: 'Literature' },
-    { id: 9, name: 'Michael Davis', status: 'Active', userType: 'Student', lastVisit: '2024-04-01T08:15:00', profilePicture: profile, email: 'michael.davis@example.com', section: 'A', department: 'Psychology' },
-    { id: 10, name: 'Jessica Taylor', status: 'Pending', userType: 'Teacher', lastVisit: '2024-03-31T17:50:00', profilePicture: profile, email: 'jessica.taylor@example.com', section: 'C', department: 'Sociology' },
-    { id: 11, name: 'William Brown', status: 'Active', userType: 'Student', lastVisit: '2024-03-30T12:35:00', profilePicture: profile, email: 'william.brown@example.com', section: 'B', department: 'Political Science' },
-    { id: 12, name: 'Emily Johnson', status: 'Pending', userType: 'Teacher', lastVisit: '2024-03-29T09:10:00', profilePicture: profile, email: 'emily.johnson@example.com', section: 'A', department: 'Economics' }
+    { id: 1, name: 'John Doe', status: 'Pending', userType: 'Student', lastVisit: '2024-04-09T10:30:00', profilePicture: profile, email: 'john.doe@example.com', university: 'FST' },
+    { id: 2, name: 'Jane Smith', status: 'Active', userType: 'Teacher', lastVisit: '2024-04-08T15:45:00', profilePicture: profile, email: 'jane.smith@example.com', university: 'FSEG' },
+    { id: 3, name: 'Alice Johnson', status: 'Active', userType: 'Student', lastVisit: '2024-04-07T09:20:00', profilePicture: profile, email: 'alice.johnson@example.com', university: 'ENIT' },
+    { id: 4, name: 'Bob Brown', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-06T11:55:00', profilePicture: profile, email: 'bob.brown@example.com', university: 'ENIT' },
+    { id: 5, name: 'Eve Wilson', status: 'Active', userType: 'Student', lastVisit: '2024-04-05T16:30:00', profilePicture: profile, email: 'eve.wilson@example.com', university: 'ENIT' },
+    { id: 6, name: 'Alex Miller', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-04T13:10:00', profilePicture: profile, email: 'alex.miller@example.com', university: 'FST' },
+    { id: 7, name: 'David Clark', status: 'Active', userType: 'Student', lastVisit: '2024-04-03T14:25:00', profilePicture: profile, email: 'david.clark@example.com', university: 'FSEG' },
+    { id: 8, name: 'Sarah White', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-02T10:40:00', profilePicture: profile, email: 'sarah.white@example.com', university: 'FST' },
+    { id: 9, name: 'Michael Davis', status: 'Active', userType: 'Student', lastVisit: '2024-04-01T08:15:00', profilePicture: profile, email: 'michael.davis@example.com', university: 'FST' },
+    { id: 10, name: 'Jessica Taylor', status: 'Pending', userType: 'Teacher', lastVisit: '2024-03-31T17:50:00', profilePicture: profile, email: 'jessica.taylor@example.com', university: 'FSEG' },
+    { id: 11, name: 'William Brown', status: 'Active', userType: 'Student', lastVisit: '2024-03-30T12:35:00', profilePicture: profile, email: 'william.brown@example.com', university: 'FSEG' },
+    { id: 12, name: 'Emily Johnson', status: 'Pending', userType: 'Teacher', lastVisit: '2024-03-29T09:10:00', profilePicture: profile, email: 'emily.johnson@example.com', university: 'FST' }
 ];
 
 const UsersTable = () => {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortColumn, setSortColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
@@ -43,11 +43,6 @@ const UsersTable = () => {
     const [userIdToConfirm, setUserIdToConfirm] = useState(null);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        // Add code here to change the language of the application
-    };
 
     const handleActionConfirmation = (action, id) => {
         if (action === 'accept') {
@@ -132,10 +127,10 @@ const UsersTable = () => {
             <div className='resto-tab'>
                 <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
                     <div className='title'>
-                        <h2>Liste des utilisateurs</h2>
+                        <h2>{t('usersTab.title')}</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg-gris" />
                     </div>
                 </div>
                 {/* Search and Total Users */}
@@ -144,7 +139,7 @@ const UsersTable = () => {
                         <input
                             className='recherche'
                             type="text"
-                            placeholder="Rechercher..."
+                            placeholder={t('docsTab.searchBarPlaceholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -154,7 +149,8 @@ const UsersTable = () => {
                     </div>
 
                     <div>
-                        <span className='nb-total'>Nombre total d'utilisateurs : {sortedData.length}</span>
+                        <span className='nb-total'>{t('usersTab.totalUsersCount', { count: sortedData.length })}</span>
+
                     </div>
                 </div>
                 {/* Filters */}
@@ -183,15 +179,16 @@ const UsersTable = () => {
 
                     )}</button>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                        <option value="All" >Tous les statuts</option>
-                        <option value="Pending">En attente</option>
-                        <option value="Active">Actif</option>
+                        <option value="All">{t('usersTab.filters.allStatus')}</option>
+                        <option value="Pending">{t('usersTab.filters.pending')}</option>
+                        <option value="Active">{t('usersTab.filters.active')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-                        <option value="All" >Tous les types</option>
-                        <option value="Student">Étudiant</option>
-                        <option value="Teacher">Enseignant</option>
+                        <option value="All">{t('usersTab.filters.allTypes')}</option>
+                        <option value="Student">{t('usersTab.filters.student')}</option>
+                        <option value="Teacher">{t('usersTab.filters.teacher')}</option>
                     </select>
+
                 </div>
                 {/* Table */}
                 <div className='d-flex justify-content-center users-tab-wrapper'>
@@ -199,11 +196,11 @@ const UsersTable = () => {
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Nom & Prénom</th>
-                                <th>Statut du compte</th>
-                                <th>Type d'utilisateur</th>
-                                <th>Dernière visite</th>
-                                <th>Gérer utilisateur</th>
+                                <th>{t('usersTab.headers.name')}</th>
+                                <th>{t('usersTab.headers.accountStatus')}</th>
+                                <th>{t('usersTab.headers.userType')}</th>
+                                <th>{t('usersTab.headers.lastVisit')}</th>
+                                <th>{t('usersTab.headers.manageUser')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -238,15 +235,15 @@ const UsersTable = () => {
                             <div className="confirmation-popup d-flex flex-column align-items-center ">
                                 <div className='d-flex flex-row-reverse justify-content-center align-items-center'>
                                     <div className='quest'>
-                                        <p className='conf-text'>{`Êtes-vous sûr de vouloir accepter cet utilisateur ?`}</p>
+                                        <p className='conf-text'>{t('usersTab.popups.acceptMsg')}</p>
                                     </div>
                                     <div className='confirmation-img'>
                                         <img className='conf-img' src={approve} alt="" />
                                     </div>
                                 </div>
                                 <div className="confirmation-buttons d-flex flex-row-reverse justify-content-center">
-                                    <button className='conf-btn' onClick={() => handleConfirmAction('accept')}>Accepter</button>
-                                    <button className='ann-btn' onClick={handleCancelAction}>Annuler</button>
+                                    <button className='conf-btn' onClick={() => handleConfirmAction('accept')}>{t('usersTab.popups.acceptBtn')}</button>
+                                    <button className='ann-btn' onClick={handleCancelAction}>{t('usersTab.popups.cancelBtn')}</button>
                                 </div>
                             </div>
                         </div>
@@ -256,15 +253,15 @@ const UsersTable = () => {
                             <div className="confirmation-popup d-flex flex-column align-items-center ">
                                 <div className='d-flex flex-row-reverse justify-content-center align-items-center'>
                                     <div className='quest'>
-                                        <p className='conf-text'>{`Êtes-vous sûr de vouloir refuser cet utilisateur ?`}</p>
+                                        <p className='conf-text'>{t('usersTab.popups.rejectMsg')}</p>
                                     </div>
                                     <div className='confirmation-img'>
                                         <img className='conf-img' src={reject} alt="" />
                                     </div>
                                 </div>
                                 <div className="confirmation-buttons d-flex flex-row-reverse justify-content-center">
-                                    <button className='conf-btn' onClick={() => handleConfirmAction('reject')}>Rejeter</button>
-                                    <button className='ann-btn' onClick={handleCancelAction}>Annuler</button>
+                                    <button className='conf-btn' onClick={() => handleConfirmAction('reject')}>{t('usersTab.popups.rejectBtn')}</button>
+                                    <button className='ann-btn' onClick={handleCancelAction}>{t('usersTab.popups.cancelBtn')}</button>
                                 </div>
                             </div>
                         </div>
@@ -274,15 +271,15 @@ const UsersTable = () => {
                             <div className="confirmation-popup d-flex flex-column align-items-center ">
                                 <div className='d-flex flex-row-reverse justify-content-center align-items-center'>
                                     <div className='quest'>
-                                        <p className='conf-text'>{`Êtes-vous sûr de vouloir supprimer cet utilisateur ?`}</p>
+                                        <p className='conf-text'>{t('usersTab.popups.deleteMsg')}</p>
                                     </div>
                                     <div className='confirmation-img'>
                                         <img className='conf-img' src={supprimer} alt="" />
                                     </div>
                                 </div>
                                 <div className="confirmation-buttons d-flex flex-row-reverse justify-content-center">
-                                    <button className='conf-btn' onClick={() => handleConfirmAction('delete')}>Supprimer</button>
-                                    <button className='ann-btn' onClick={handleCancelAction}>Annuler</button>
+                                    <button className='conf-btn' onClick={() => handleConfirmAction('delete')}>{t('usersTab.popups.deleteBtn')}</button>
+                                    <button className='ann-btn' onClick={handleCancelAction}>{t('usersTab.popups.cancelBtn')}</button>
                                 </div>
                             </div>
                         </div>
@@ -307,19 +304,17 @@ const UsersTable = () => {
                                             </div>
                                         </div>
                                         <div className='mb-5'>
-                                            <p className='details'>Détails</p>
-                                            <p className='pop-detail'><span className='attr'>ID :</span>{fakeData[selectedUserId - 1].id}</p>
-                                            <p className='pop-detail'><span className='attr'>Email :</span>{fakeData[selectedUserId - 1].email}</p>
-                                            <p className='pop-detail'><span className='attr'>Section :</span>{fakeData[selectedUserId - 1].section}</p>
-                                            <p className='pop-detail'><span className='attr'>Département :</span>{fakeData[selectedUserId - 1].department}</p>
+                                            <p className='details'>{t('usersTab.popups.details')}</p>
+                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.id')}:</span>{fakeData[selectedUserId - 1].id}</p>
+                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.email')} :</span>{fakeData[selectedUserId - 1].email}</p>
+                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.university')} :</span>{fakeData[selectedUserId - 1].university}</p>
                                         </div>
                                     </div>
                                 )}
-
                             </div>
-
                         </div>
                     )}
+
 
                 </div>
             </div>

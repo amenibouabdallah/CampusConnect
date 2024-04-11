@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import NavigationMenu from '../../shared/Navbar/Navbar';
-import trash from '../../assets/images/trash.png';
-import refuse from '../../assets/images/Refuser.png';
-import approuver from '../../assets/images/Approuver.png';
 import dateUp from '../../assets/images/calendar-up.png';
 import dateDown from '../../assets/images/calendar-down.png';
-import approve from '../../assets/images/approve.png';
-import supprimer from '../../assets/images/supprimer.png';
-import reject from '../../assets/images/reject.png';
 import './Docs-tab.css'
-
-
-
 const fakeData = [
     { id: 1, name: 'Algèbre', creationDate: '2024-04-09T10:30:00', submissionDate: '2024-04-09T10:30:00', submittedBy: 'John Doe', documentType: 'Relevé des notes', status: 'Accepted' },
     { id: 2, name: 'Conditionnel', creationDate: '2024-04-08T15:45:00', submissionDate: '2024-04-08T15:45:00', submittedBy: 'Jane Smith', documentType: 'Annonce', status: 'Pending' },
@@ -26,10 +18,8 @@ const fakeData = [
     { id: 11, name: 'Document11', creationDate: '2024-03-30T12:35:00', submissionDate: '2024-03-30T12:35:00', submittedBy: 'William Brown', documentType: 'Annonce', status: 'Accepted' },
     { id: 12, name: 'Document12', creationDate: '2024-03-29T09:10:00', submissionDate: '2024-03-29T09:10:00', submittedBy: 'Emily Johnson', documentType: 'Emploi du temps', status: 'Pending' }
 ];
-
-
-
 const DocsUserTable = () => {
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortColumn, setSortColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
@@ -88,13 +78,13 @@ const DocsUserTable = () => {
             <div>
                 <NavigationMenu />
             </div>
-            <div className='resto-tab'>
+            <div className='doc-user-tab'>
                 <div className='recherche-nb'>
                     <div className='recherche-wrapper'>
                         <input
                             className='recherche'
                             type="text"
-                            placeholder="Rechercher..."
+                            placeholder={t('docsTab.searchBarPlaceholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -104,7 +94,7 @@ const DocsUserTable = () => {
                     </div>
 
                     <div>
-                        <span className='nb-total'>Nombre total de documents : {sortedData.length}</span>
+                        <span className='nb-total'>{t('docsTab.totalDocuments', { count: sortedData.length })}</span>
                     </div>
                 </div>
                 {/* Filters */}
@@ -138,16 +128,17 @@ const DocsUserTable = () => {
 
                     )}</button>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                        <option value="All" >Tous les statuts</option>
-                        <option value="Pending">En attente</option>
-                        <option value="Active">Approuvé</option>
+                        <option value="All">{t('docsTab.filters.allStatus')}</option>
+                        <option value="Pending">{t('docsTab.filters.pending')}</option>
+                        <option value="Active">{t('docsTab.filters.approved')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-                        <option value="All" >Tous les types</option>
-                        <option value="Relevé des notes">Relevé des notes</option>
-                        <option value="Emploi du temps">Emploi du temps</option>
-                        <option value="Annonce">Annonce</option>
+                        <option value="All">{t('docsTab.filters.allTypes')}</option>
+                        <option value="Relevé des notes">{t('docsTab.filters.gradeReport')}</option>
+                        <option value="Emploi du temps">{t('docsTab.filters.schedule')}</option>
+                        <option value="Annonce">{t('docsTab.filters.announcement')}</option>
                     </select>
+
                 </div>
                 {/* Table */}
                 <div className='d-flex justify-content-center users-tab-wrapper'>
@@ -155,13 +146,13 @@ const DocsUserTable = () => {
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Nom du document</th>
-                                <th>Date de création</th>
-                                <th>Date de dépôt</th>
-                                <th>Statut du document</th>
-                                <th>Type du document</th>
-                                <th>Déposé par</th>
-                                <th>Gestion des documents</th>
+                                <th>{t('docsTab.documentName')}</th>
+                                <th>{t('docsTab.creationDate')}</th>
+                                <th>{t('docsTab.submissionDate')}</th>
+                                <th>{t('docsTab.documentStatus')}</th>
+                                <th>{t('docsTab.documentType')}</th>
+                                <th>{t('docsTab.submittedBy')}</th>
+                                <th>{t('docsTab.download')}</th>
                             </tr>
                         </thead>
                         <tbody>

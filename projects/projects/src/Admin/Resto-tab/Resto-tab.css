@@ -53,7 +53,7 @@ th{
 }
 /* apply border radius to the corners */
 table {
-    border-collapse: collapse;
+    border-collapse: separate;
     border-style: hidden; /* hide standard table (collapsed) border */
     border: black;
 }

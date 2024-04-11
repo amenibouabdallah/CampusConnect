@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import logo from '../../assets/images/noBg-logo.png';
 import profile from '../../assets/images/profile.png';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown'
@@ -8,22 +9,13 @@ import './Navbar.css'
 
 const NavigationMenu = ({ user }) => {
     const fakeUser = {
-        profilePicture: profile, // Chemin d'accès à l'image de profil fictive
+        profilePicture: profile,
         userType: "teacher",
     };
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        //add code here to change the language of the application
-    };
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const handleLogout = () => {
-        // Supprimer les informations d'authentification de l'utilisateur
-        // Par exemple, en supprimant le token d'authentification du localStorage
         localStorage.removeItem('token');
-
-        // Rediriger l'utilisateur vers la page de connexion
         navigate('/');
     };
 
@@ -31,19 +23,18 @@ const NavigationMenu = ({ user }) => {
         <nav className='navig-menu'>
             <div className="logo-cont">
                 <img className='nav-logo' src={logo} alt="Logo" />
-
             </div>
             <div className='navs'>
-                <NavLink className='nav' exact to="/docs" activeClassName="active">Documents</NavLink>
-                <NavLink className='nav' to="/meals" activeClassName="active">Menu</NavLink>
-                <NavLink className='nav' to="/transport" activeClassName="active">Transport</NavLink>
+                <NavLink className='nav' exact to="/docs" activeClassName="active">{t('navigationMenu.documents')}</NavLink>
+                <NavLink className='nav' to="/meals" activeClassName="active">{t('navigationMenu.menu')}</NavLink>
+                <NavLink className='nav' to="/transport" activeClassName="active">{t('navigationMenu.transport')}</NavLink>
                 {fakeUser.userType === "teacher" && (
-                    <NavLink className='nav' to="/upload" activeClassName="active">Déposez un document</NavLink>
+                    <NavLink className='nav' to="/upload" activeClassName="active">{t('navigationMenu.uploadDocument')}</NavLink>
                 )}
             </div>
             <div className="profile-lang">
                 <div className='lang'>
-                    <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                    <LanguageDropdown className="lang-bg-gris" />
                 </div>
                 <div className='logout'>
                     <button className='gestion-btn' onClick={handleLogout}><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFDA6F" class="bi bi-power" viewBox="0 0 16 16">

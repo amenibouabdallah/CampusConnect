@@ -6,7 +6,7 @@
 
 }
 .table1 {
-    border-collapse: collapse;
+    border-collapse: separate;
     width: 80%;
     margin: 30px;
     box-shadow: none;
@@ -14,6 +14,10 @@
 }
 .table1>thead {
     vertical-align: middle;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
 }
 .table1 {
     vertical-align: middle;

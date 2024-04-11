@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import profile from '../../assets/images/profile.png';
+import { useTranslation } from 'react-i18next';
 import './Profile.css'
 import NavigationMenu from '../../shared/Navbar/Navbar';
 
@@ -11,7 +12,7 @@ const ProfilePage = () => {
         password: '******',
         profilePicture: profile,
     };
-
+    const { t } = useTranslation();
     // États pour gérer les champs du formulaire
     const [fullName, setFullName] = useState(user.fullName);
     const [email, setEmail] = useState(user.email);
@@ -73,7 +74,7 @@ const ProfilePage = () => {
                                         <img src={profilePicture} alt="Profile" className="profile-picture" />
                                     )}
                                     <label htmlFor="fileInput" className="custom-file-upload">
-                                        Modifier photo de profil
+                                        {t('profile.changeProfilePicture')}
                                     </label>
                                     <input
                                         id="fileInput"
@@ -87,11 +88,11 @@ const ProfilePage = () => {
                                     <label className='prof-label'>
                                         <div className='prof-element'>
                                             <div className='profile-label'>
-                                                Nom et Prénom:
+                                                {t('profile.fullName')}:
                                             </div>
                                             <div>
                                                 <p className='current'>{fullName}</p>
-                                                <p className='new-label'>Nouveau nom et prénom:</p>
+                                                <p className='new-label'>{t('profile.newFullName')}:</p>
                                                 <input className='profile-input' type="text" value={newFullName} onChange={handleFullNameChange} />
                                             </div>
                                         </div>
@@ -101,11 +102,11 @@ const ProfilePage = () => {
                                     <label className='prof-label'>
                                         <div className='prof-element'>
                                             <div className='profile-label'>
-                                                Adresse Mail:
+                                                {t('profile.email')}:
                                             </div>
                                             <div>
                                                 <p className='current'>{email}</p>
-                                                <p className='new-label'>Nouveau mail:</p>
+                                                <p className='new-label'>{t('profile.newEmail')}:</p>
                                                 <input className='profile-input' type="email" value={newEmail} onChange={handleEmailChange} />
                                             </div>
                                         </div>
@@ -114,13 +115,13 @@ const ProfilePage = () => {
                                     <label className='prof-label'>
                                         <div className='prof-element'>
                                             <div className='profile-label'>
-                                                Mot de passe:
+                                                {t('profile.password')}:
                                             </div>
                                             <div>
                                                 <p className='current'>{password}</p>
-                                                <p className='new-label'>Nouveau mot de passe:</p>
+                                                <p className='new-label'>{t('profile.newPassword')}:</p>
                                                 <input className='profile-input' type="password" value={newPassword} onChange={handlePasswordChange} />
-                                                <p className='new-label'> Confirmer mot de passe:</p>
+                                                <p className='new-label'>{t('profile.confirmPassword')}:</p>
                                                 <input className='profile-input' type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
                                             </div>
                                         </div>
@@ -134,8 +135,8 @@ const ProfilePage = () => {
                                     setNewEmail('');
                                     setNewPassword('');
                                     setConfirmPassword('');
-                                }}>Annuler</button>
-                                <button className='save-btn' type="submit">Enregistrer</button>
+                                }}>{t('profile.cancel')}</button>
+                                <button className='save-btn' type="submit">{t('profile.save')}</button>
                             </div>
                         </div>
 

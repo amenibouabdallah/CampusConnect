@@ -3,14 +3,10 @@ import './Resto-tab.css';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 import { useMenu } from '../../shared/MenuContext';
+import { useTranslation } from 'react-i18next'; // Ajout de l'import pour utiliser la traduction
 
 const MealTable = () => {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        // Add code here to change the language of the application
-    };
+    const { t } = useTranslation(); // Utilisation du hook useTranslation pour accéder aux traductions
     const { menuData, updateMenuData } = useMenu();
 
     const [lundiDejeuner, setLundiDejeuner] = useState('');
@@ -96,10 +92,10 @@ const MealTable = () => {
             <div className='resto-tab'>
                 <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
                     <div className='title'>
-                        <h2>Menu restaurant de la semaine</h2>
+                        <h2>{t('restoTab.title')}</h2>
                     </div>
                     <div className='lang'>
-                        <LanguageDropdown className="bg-lang" currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg-gris" />
                     </div>
                 </div>
                 <div className='d-flex justify-content-center'>
@@ -107,19 +103,19 @@ const MealTable = () => {
                         <table className='meal-tab'>
                             <thead>
                                 <tr>
-                                    <th className='semi-thead'>Repas</th>
-                                    <th>Lundi</th>
-                                    <th>Mardi</th>
-                                    <th>Mercredi</th>
-                                    <th>Jeudi</th>
-                                    <th>Vendredi</th>
-                                    <th>Samedi</th>
-                                    <th>Dimanche</th>
+                                    <th className='semi-thead'>{t('restoTab.meal')}</th>
+                                    <th>{t('restoTab.monday')}</th>
+                                    <th>{t('restoTab.tuesday')}</th>
+                                    <th>{t('restoTab.wednesday')}</th>
+                                    <th>{t('restoTab.thursday')}</th>
+                                    <th>{t('restoTab.friday')}</th>
+                                    <th>{t('restoTab.saturday')}</th>
+                                    <th>{t('restoTab.sunday')}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='semi-thead'>Déjeuner</td>
+                                    <td className='semi-thead'>{t('restoTab.lunch')}</td>
                                     <td><textarea value={lundiDejeuner} onChange={(e) => setLundiDejeuner(e.target.value)} required /></td>
                                     <td><textarea value={mardiDejeuner} onChange={(e) => setMardiDejeuner(e.target.value)} required /></td>
                                     <td><textarea value={mercrediDejeuner} onChange={(e) => setMercrediDejeuner(e.target.value)} required /></td>
@@ -129,7 +125,7 @@ const MealTable = () => {
                                     <td><textarea value={dimancheDejeuner} onChange={(e) => setDimancheDejeuner(e.target.value)} required /></td>
                                 </tr>
                                 <tr>
-                                    <td className='semi-thead'>Dîner</td>
+                                    <td className='semi-thead'>{t('restoTab.dinner')}</td>
                                     <td><textarea value={lundiDiner} onChange={(e) => setLundiDiner(e.target.value)} required /></td>
                                     <td><textarea value={mardiDiner} onChange={(e) => setMardiDiner(e.target.value)} required /></td>
                                     <td><textarea value={mercrediDiner} onChange={(e) => setMercrediDiner(e.target.value)} required /></td>
@@ -141,11 +137,11 @@ const MealTable = () => {
                             </tbody>
                         </table>
                         <div className="alert alert-danger" role="alert" style={{ display: isSubmitted && !isFormValid() ? 'block' : 'none' }}>
-                            Veuillez remplir tous les champs.
+                            {t('form.errorMessage')}
                         </div>
                         <div className='sub-button'>
                             <button type="submit" className="submit">
-                                Valider
+                                {t('form.submitButton')}
                             </button>
                             <div className='other'></div>
                         </div>

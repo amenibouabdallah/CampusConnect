@@ -1,18 +1,16 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown'
 import logo from '../../assets/images/noBg-logo.png'
 import campus from '../../assets/images/Campus.jpg'
 import '../SignIn-SignUp.css'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+
 function VerifyAccountReset() {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
-    const navigate = useNavigate();
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        //add code here to change the language of the application
-    };
+    const { t } = useTranslation();
     const [codes, setCodes] = useState(['', '', '', '', '', '']);
+    const navigate = useNavigate();
 
     const handleCodeChange = (e, index) => {
         const newCodes = [...codes];
@@ -24,13 +22,12 @@ function VerifyAccountReset() {
         e.preventDefault();
         const email = localStorage.getItem('email');
         const verificationCode = codes.join('');
-        try{
-            const response = await axios.post('http://localhost:3000/auth/confirm-code-forgot',{email,verificationCode});
+        try {
+            const response = await axios.post('http://localhost:3000/auth/confirm-code-forgot', { email, verificationCode });
             console.log(response);
             navigate('/account/reset');
-        }catch(error){
+        } catch (error) {
             console.error('Error resetting profile profile:', error);
-
         }
     };
 
@@ -39,15 +36,15 @@ function VerifyAccountReset() {
             <div className='left-part'>
                 <div className='logolang'>
                     <div className='lang'>
-                        <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg" />
                     </div>
                     <div className='logo'>
                         <img className='nobg-logo' src={logo} alt="" />
                     </div>
                 </div>
-                <h1 className='title'>Rénitialiser le mot de passe !</h1>
+                <h1 className='title'>{t('verifyAccountReset.resetPassword')}</h1>
                 <div>
-                    <p className='mdp verify'>Veuillez vérifier votre adresse mail <br /> </p>
+                    <p className='mdp verify'>{t('verifyAccountReset.checkEmail')}<br /> </p>
                     <form onSubmit={handleSubmit} className='login-form' >
                         <div className='code-inputs'>
                             {codes.map((code, index) => (
@@ -64,8 +61,7 @@ function VerifyAccountReset() {
                             ))}
                         </div>
                         <br />
-                        <button className='submit-button' type="submit">Valider </button>
-
+                        <button className='submit-button' type="submit">{t('verifyAccountReset.validate')}</button>
                     </form>
                 </div>
             </div>
@@ -76,4 +72,4 @@ function VerifyAccountReset() {
     )
 }
 
-export default VerifyAccountReset
+export default VerifyAccountReset;

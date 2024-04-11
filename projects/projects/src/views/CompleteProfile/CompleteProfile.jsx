@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown'
 import logo from '../../assets/images/noBg-logo.png'
 import campus from '../../assets/images/Campus.jpg'
@@ -9,12 +10,7 @@ import { useEffect } from 'react';
 
 
 function CompleteProfile() {
-    const [currentLang, setCurrentLang] = useState('fr'); // Assuming 'fr' is the default language
-
-    const changeLanguage = (lang) => {
-        setCurrentLang(lang);
-        //add code here to change the language of the application
-    };
+    const { t } = useTranslation();
     const [fullName, setFullName] = useState('');
     const [profileImage, setProfileImage] = useState(null); // Changed initial state to null
     const [fileName, setFileName] = useState('');
@@ -65,26 +61,26 @@ function CompleteProfile() {
                 navigate('/account/verify-account');
             } catch (error) {
                 console.error('Error completing profile:', error);
+                alert(t('completeProfile.errorCompletingProfile'));
             }
         } else {
             console.log('Please fill in all the information');
+            alert(t('completeProfile.fillInformation'));
         }
     };
-
-
 
     return (
         <div className='login-view'>
             <div className='left-part'>
                 <div className='logolang'>
                     <div className='lang'>
-                        <LanguageDropdown currentLang={currentLang} changeLanguage={changeLanguage} />
+                        <LanguageDropdown className="lang-bg" />
                     </div>
                     <div className='logo'>
                         <img className='nobg-logo' src={logo} alt="" />
                     </div>
                 </div>
-                <h1 className='title'>Complétez votre profil ! </h1>
+                <h1 className='title'>{t('completeProfile.welcome')}</h1>
                 <div>
                     <form onSubmit={handleSubmit} className='login-form'>
                         <input
@@ -92,7 +88,7 @@ function CompleteProfile() {
                             type="text"
                             value={fullName}
                             onChange={handleNameChange}
-                            placeholder="Nom et Prénom"
+                            placeholder={t('completeProfile.fullNamePlaceholder')}
                             required
                         />
                         <label className="file-input">
@@ -104,7 +100,7 @@ function CompleteProfile() {
                                 onChange={handleFileChange}
                                 required
                             />
-                            <span className="file-input-label"> <p className='upload-text'>{fileName ? `Nom du fichier : ${fileName}` : 'Merci de joindre votre photo de profil'}</p> <br /> <svg id="Group_8205" data-name="Group 8205" xmlns="http://www.w3.org/2000/svg" width="55.284" height="48.954" viewBox="0 0 55.284 48.954">
+                            <span className="file-input-label"> <p className='upload-text'>{fileName ? `Nom du fichier : ${fileName}` : t('completeProfile.uploadPhoto')}</p> <br /> <svg id="Group_8205" data-name="Group 8205" xmlns="http://www.w3.org/2000/svg" width="55.284" height="48.954" viewBox="0 0 55.284 48.954">
                                 <g id="Group_8204" data-name="Group 8204">
                                     <g id="Group_8203" data-name="Group 8203">
                                         <circle id="Ellipse_18" data-name="Ellipse 18" cx="3.798" cy="3.798" r="3.798" transform="translate(17.039 12.08)" fill="#bbc5d5" opacity="0.5" />
@@ -114,7 +110,7 @@ function CompleteProfile() {
                                 </g>
                             </svg></span>
                         </label>
-                        <button className='submit-button' type="submit">S'inscrire </button>
+                        <button className='submit-button' type="submit">{t('completeProfile.signUpButton')}</button>
                     </form>
                 </div>
             </div>
