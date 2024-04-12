@@ -35,6 +35,11 @@ function UploadFileAdmin() {
             console.log('Aucun fichier sélectionné.');
             return;
         }
+
+
+
+
+        
         // Votre logique de soumission du formulaire ici
         console.log('Formulaire soumis avec succès !');
         console.log('Nom du document:', fullName);

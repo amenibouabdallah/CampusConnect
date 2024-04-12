@@ -4,7 +4,7 @@ const fileRoutes =require('./routes/fileRoutes');
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 3002;
 const MONGODB_URI = 'mongodb://localhost:27017';
 
 
