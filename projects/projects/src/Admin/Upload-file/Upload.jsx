@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 import upload from '../../assets/images/upload-img.png'
 import './Upload.css'
+import axios from 'axios'
 
 function UploadFileAdmin() {
     const { t } = useTranslation();
@@ -29,13 +30,29 @@ function UploadFileAdmin() {
     const handleDocTypeChange = (event) => {
         setDocType(event.target.value);
     };
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (!DocDepose) {
             console.log('Aucun fichier sélectionné.');
             return;
         }
+        const formData = new FormData();
+        formData.append('file', DocDepose);
+        formData.append('fullName', fullName);
+        formData.append('docType', docType);
+        formData.append('selectedDate', selectedDate);
 
+        try{
+            const response = await axios.post('http://localhost:3002/api/files/upload', formData,{
+                headers : {
+                    'Contet-Type':'multipart/form-data'
+                }
+            });
+            console.log(response);
+        }catch(error){
+            console.log(error);
+
+        }
 
 
 

@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
-  filename: String,
-  fileType: ['relevé', 'annonces', 'emplois'],
-  path: String,
-  size: Number,
-  mimetype: String,
+  fileName: {type: String},
+  docType:{
+    type: String,
+      enum:  ['grades', 'announcement', 'schedule']},
+  fullName:{type: String},
+  selectedDate:{type: Date},
+  path: {type: String},
+  size: {type: Number},
+  mimetype: {type :String},
   uploadedAt: { type: Date, default: Date.now }
 });
 

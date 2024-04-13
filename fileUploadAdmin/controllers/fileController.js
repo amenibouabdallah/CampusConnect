@@ -20,12 +20,15 @@ exports.uploadFile = (req, res) => {
       return res.status(400).json({ message: 'Error uploading file', error: err });
     }
     try {
-      const { filename, path, size, mimetype } = req.file;
+      const { filename, path, size, mimetype, docType, fullName, selectedDate} = req.file;
       const file = new File({
-        filename,
-        path,
-        size,
-        mimetype
+       fileName: filename,
+        path: path,
+        size: size,
+        mimetype: mimetype,
+        docType: docType,
+        fullName: fullName,
+        selectedDate: selectedDate
       });
       await file.save();
       res.status(201).json({ message: 'File uploaded successfully', file });
