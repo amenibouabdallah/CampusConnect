@@ -20,7 +20,9 @@ exports.uploadFile = (req, res) => {
       return res.status(400).json({ message: 'Error uploading file', error: err });
     }
     try {
-      const { filename, path, size, mimetype, docType, fullName, selectedDate} = req.file;
+      const { filename, path, size, mimetype} = req.file;
+      const {fullName, selectedDate, docType} = req.body;
+      console.log(fullName, selectedDate, docType);
       const file = new File({
        fileName: filename,
         path: path,
@@ -31,6 +33,17 @@ exports.uploadFile = (req, res) => {
         selectedDate: selectedDate
       });
       await file.save();
+      File.find({})
+      .then((files) => {
+        // Log or send the data to console
+        console.log(files);
+      })
+      .catch((err) => {
+        // Log or send the error
+        console.log(err);
+      });
+      
+
       res.status(201).json({ message: 'File uploaded successfully', file });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error });
