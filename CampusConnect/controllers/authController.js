@@ -176,7 +176,7 @@ const signIn = async (req, res) => {
       }
   
       // JWT token generation
-      const token = jwt.sign({ userId: user._id, email: user.email }, 'your_secret_key', { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user._id, email: user.email, typeAccount: user.typeAccount }, 'your_secret_key', { expiresIn: '1h' });
   
       res.status(200).json({ message: 'Sign in successful', token });
     } catch (error) {
