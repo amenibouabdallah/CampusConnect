@@ -43,7 +43,7 @@ function UploadFileAdmin() {
         formData.append('selectedDate', selectedDate);
 
         try{
-            const response = await axios.post('http://localhost:3002/api/files/upload', formData,{
+            const response = await axios.post('http://localhost:3000/api/files/upload', formData,{
                 headers : {
                     'Contet-Type':'multipart/form-data'
                 }

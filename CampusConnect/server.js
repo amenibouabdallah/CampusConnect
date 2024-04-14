@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
+const fileRoutes =require('./routes/fileRoutes');
 const bodyParser = require('body-parser');
 
 
@@ -22,12 +23,13 @@ mongoose.connect(dbConnectionString, { useNewUrlParser: true, useUnifiedTopology
 
   app.use(cors()); // Enable CORS
   app.use(bodyParser.json()); // Parse JSON request bodies
-  app.use(express.json({ limit: '50mb' })); // Increased JSON payload limit
-  app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Parse URL-encoded bodies
-  
+  app.use(express.json({ limit: '100mb' })); // Increased JSON payload limit
+  app.use(express.urlencoded({ extended: true, limit: '100mb' })); // Parse URL-encoded bodies
+  app.use(express.json());
+
   // Routes
   app.use('/auth', authRoutes);
-
+  app.use('/api/files', fileRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
