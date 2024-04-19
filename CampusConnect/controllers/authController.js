@@ -138,7 +138,7 @@ const confirmCode = async (req,res) => {
         const user = new User({
             email: userToConfirm.email,
             password: userToConfirm.password, 
-            typeAccount: userToConfirm.typeAccount,
+            userType: userToConfirm.userType,
             university: userToConfirm.university,
             fullName: userToConfirm.fullName,
             profileImage: userToConfirm.profileImage,
@@ -159,30 +159,37 @@ const confirmCode = async (req,res) => {
         res.status(500).json({ message: error.message });
       }
     };
-const signIn = async (req, res) => {
-    try {
-      const { email, password } = req.body;
+    const signIn = async (req, res) => {
+      try {
+          const { email, password } = req.body;
   
-      const user = await User.findOne({ email });
+          const user = await User.findOne({ email });
   
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+          if (!user) {
+              return res.status(404).json({ message: 'User not found' });
+          }
+  
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+  
+          if (!isPasswordValid) {
+              return res.status(401).json({ message: 'Invalid password' });
+          }
+  
+          // Assuming user.typeAccount represents the type of the account
+          let redirectPath = '/profile'; // default redirect path
+          if (user.email === 'amenybouabdallah@gmail.com') {
+              redirectPath = '/admin/users';
+          }
+  
+          // JWT token generation
+          const token = jwt.sign({ userId: user._id, email: user.email, userType: user.userType }, 'your_secret_key', { expiresIn: '1h' });
+  
+          res.status(200).json({ message: 'Sign in successful', token, redirectPath });
+      } catch (error) {
+          res.status(500).json({ message: error.message });
       }
-  
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-  
-      if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Invalid password' });
-      }
-  
-      // JWT token generation
-      const token = jwt.sign({ userId: user._id, email: user.email, typeAccount: user.typeAccount }, 'your_secret_key', { expiresIn: '1h' });
-  
-      res.status(200).json({ message: 'Sign in successful', token });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
   };
+  
 
 
   const forgotPassword = async(req, res)=>{

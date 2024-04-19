@@ -26,11 +26,21 @@ function SignIn() {
         try {
             const response = await axios.post('http://localhost:3000/auth/signin', { email: email, password: password });
             console.log("Response:", response.data);
+            const { token, redirectPath } = response.data;
+            localStorage.setItem('token', token);
+            // Redirect to the appropriate path
+            if (redirectPath) {
+                window.location.href = redirectPath;
+            } else {
+                // Handle the case if redirectPath is not defined
+                console.error('Redirect path is not defined');
+            }
         } catch (error) {
             console.error('Error:', error.response.data.message);
             setShowAlert(true);
         }
     };
+    
 
     return (
         <div className='login-view'>
