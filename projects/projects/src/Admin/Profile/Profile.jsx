@@ -75,16 +75,33 @@ const AdminProfile = () => {
     };
 
     // Fonction de soumission du formulaire
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Logique de soumission du formulaire
-        console.log('Formulaire soumis !');
-        // Réinitialiser les états avec les données de l'utilisateur
-        setEmail(newEmail || user.email);
-        setPassword(newPassword || user.password);
-        setNewEmail('');
-        setNewPassword('');
-        setConfirmPassword('');
+        try {
+            // Send a POST request to the specified URL with the provided data
+            const response = await axios.post('http://localhost:3000/admin/change-pass-or-email', {
+                email,
+                newEmail,
+                newPassword,
+                confirmPassword,
+            });
+    
+            // Log a message indicating the form was submitted
+            console.log('Form submitted!');
+    
+            // Optionally, you could handle the response data here (e.g., displaying a success message)
+    
+            // Update state variables with the new data or existing user data
+            setEmail(  user.email);
+            setPassword(newPassword || user.password);
+            setNewEmail('');
+            setNewPassword('');
+            setConfirmPassword('');
+        } catch (error) {
+            // Handle errors (e.g., log the error, display an error message to the user)
+            console.error('An error occurred:', error);
+            // Optionally, you could display an error message to the user here
+        }
     };
 
 
