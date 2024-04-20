@@ -182,7 +182,7 @@ const confirmCode = async (req,res) => {
           }
   
           // JWT token generation
-          const token = jwt.sign({ userId: user._id, email: user.email, userType: user.userType }, 'your_secret_key', { expiresIn: '1h' });
+          const token = jwt.sign({ userId: user._id, email: user.email, userType: user.userType }, '69f3db1b769ab7f809bbf657c3b1091d4bb9c34a8d41f8b09bc5e3c72f342289', { expiresIn: '1h' });
   
           res.status(200).json({ message: 'Sign in successful', token, redirectPath });
       } catch (error) {
@@ -254,6 +254,8 @@ const confirmCode = async (req,res) => {
             res.status(500).json({message: error.message});
     }
         }	
-    
+
+       
+            
 
 module.exports = {signUp, signIn, forgotPassword, confirmCode, confirmCodeForgot,newPassword,completeProfile};

@@ -1,29 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { useTranslation } from 'react-i18next';
+import { jwtDecode } from 'jwt-decode'; // Import the named export
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import Sidebar from '../../shared/Sidebar/Sidebar';
-
+import axios from 'axios';
 const AdminProfile = () => {
-    const user = {
-        fullName: 'Sami Samsoum',
-        email: 'sami@gmail.com',
-        password: '******',
-    };
+
+    /*fetching the user by token*/
+
+   
     const { t } = useTranslation();
-    // États pour gérer les champs du formulaire
-    const [fullName, setFullName] = useState(user.fullName);
-    const [email, setEmail] = useState(user.email);
-    const [password, setPassword] = useState(user.password);
-    const [newFullName, setNewFullName] = useState('');
+    const [user, setUser] = useState(null); // Initialize user state as null
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const decodedToken = jwtDecode(token);
+                    const email = decodedToken.email;
+
+                    // Make the POST request with the email
+                    const response = await axios.post('http://localhost:3000/admin/get-email', { email: email});
+
+                    // Update the user state with the response data
+                    console.log(response.data);
+                    setUser(response.data);
+                    
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    // Consider displaying an error message to the user
+                }
+            } else {
+                console.warn('No token found in localStorage');
+                // Consider handling the case where no token is available
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            setEmail(user.user.email);
+            setPassword('*****');
+            
+        }
+    }, [user]);
+    
+    
+
+
+    
+
     // Fonctions de gestion des changements des champs
-    const handleFullNameChange = (e) => {
-        setNewFullName(e.target.value);
-    };
+    
 
     const handleEmailChange = (e) => {
         setNewEmail(e.target.value);
@@ -43,10 +80,8 @@ const AdminProfile = () => {
         // Logique de soumission du formulaire
         console.log('Formulaire soumis !');
         // Réinitialiser les états avec les données de l'utilisateur
-        setFullName(newFullName || user.fullName);
         setEmail(newEmail || user.email);
         setPassword(newPassword || user.password);
-        setNewFullName('');
         setNewEmail('');
         setNewPassword('');
         setConfirmPassword('');
@@ -92,7 +127,7 @@ const AdminProfile = () => {
                                                     {t('profile.password')}:
                                                 </div>
                                                 <div>
-                                                    <p className='current'>{password}</p>
+                                                    <p className='current'>{"*****"}</p>
                                                     <p className='new-label'>{t('profile.newPassword')}:</p>
                                                     <input className='profile-input' type="password" value={newPassword} onChange={handlePasswordChange} />
                                                     <p className='new-label'> {t('profile.confirmPassword')}:</p>
