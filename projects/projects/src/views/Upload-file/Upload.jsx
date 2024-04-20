@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import NavigationMenu from '../../shared/Navbar/Navbar';
 import upload from '../../assets/images/upload-img.png'
+import axios from 'axios'
 import './Upload.css'
 
 function UploadFileUser() {
@@ -27,12 +28,38 @@ function UploadFileUser() {
     const handleDocTypeChange = (event) => {
         setDocType(event.target.value);
     };
+<<<<<<< Updated upstream
     const handleSubmit = (event) => {
+=======
+
+    const handleSubmit = async (event) => {
+>>>>>>> Stashed changes
         event.preventDefault();
         if (!DocDepose) {
             console.log('Aucun fichier sélectionné.');
             return;
         }
+        const formData = new FormData();
+        formData.append('file', DocDepose);
+        formData.append('fullName', fullName);
+        formData.append('docType', docType);
+        formData.append('selectedDate', selectedDate);
+
+        try{
+            const response = await axios.post('http://localhost:3000/api/files/upload', formData,{
+                headers : {
+                    'Contet-Type':'multipart/form-data'
+                }
+            });
+            console.log(response);
+        }catch(error){
+            console.log(error);
+
+        }
+
+
+
+        
         // Votre logique de soumission du formulaire ici
         console.log('Formulaire soumis avec succès !');
         console.log('Nom du document:', fullName);
@@ -41,6 +68,9 @@ function UploadFileUser() {
         console.log('Fichier sélectionné:', DocDepose);
         console.log('Nom du fichier:', fileName);
     };
+      
+    
+    
 
     return (
         <div className='usermenu'>

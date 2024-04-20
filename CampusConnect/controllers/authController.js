@@ -247,6 +247,72 @@ const signIn = async (req, res) => {
             res.status(500).json({message: error.message});
     }
         }	
+
+
+        const showAllUsers = async (req, res) => {
+            try {
+                const users = await User.find();
+                res.json(users);
+            } catch (error) {
+                res.status(500).json({ message: 'Failed to fetch users', error: error.message });
+            }
+        };
+
+        /*const showUser = async (req, res) => {
+            const { userId } = req.params; // Extract userId from request parameters
+        
+            try {
+                const user = await User.findById(userId); // Find user by ID in database
+        
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+        
+                // User found, send user data in response
+                res.status(200).json({ user });
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                res.status(500).json({ message: 'Internal server error' });
+            }
+        };*/
+        
+        const updateUserById = async (req, res) => {
+            const { id } = req.params;
+            const { email, userType, university, fullName, profileImage } = req.body;
+        
+            try {
+                const updatedUser = await User.findByIdAndUpdate(
+                    id,
+                    { email, userType, university, fullName, profileImage, password },
+                    { new: true } // Return the updated user after update
+                );
+        
+                if (!updatedUser) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+        
+                res.json(updatedUser);
+            } catch (error) {
+                res.status(500).json({ message: 'Failed to update user', error: error.message });
+            }
+        };
+        const deleteUserById = async (req, res) => {
+            const { id } = req.params;
+        
+            try {
+                const deletedUser = await User.findByIdAndDelete(id);
+        
+                if (!deletedUser) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+        
+                res.status(200).json({ message: 'User deleted successfully' });
+            } catch (error) {
+                res.status(500).json({ message: 'Failed to delete user', error: error.message });
+            }
+        };
+          
+        
     
 
-module.exports = {signUp, signIn, forgotPassword, confirmCode, confirmCodeForgot,newPassword,completeProfile};
+module.exports = {signUp, signIn, forgotPassword, confirmCode, confirmCodeForgot,newPassword,completeProfile, showAllUsers,updateUserById,deleteUserById};

@@ -12,7 +12,11 @@
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
+<<<<<<< Updated upstream
     "react-router-dom": "^6.22.3",
+=======
+    "react-i18next": "^14.1.0",
+>>>>>>> Stashed changes
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -40,6 +44,13 @@
       "last 1 safari version"
     ]
   },
+<<<<<<< Updated upstream
   "proxy": "http://localhost:3000"
 
+=======
+  "proxy": "http://localhost:3000",
+  "devDependencies": {
+    "react-router-dom": "^6.22.3"
+  }
+>>>>>>> Stashed changes
 }

@@ -34,3 +34,31 @@ exports.uploadFile = (req, res) => {
     }
   });
 };
+
+// Controller method to display information of all files
+exports.getAllFiles = async (req, res) => {
+  try {
+    const files = await File.find();
+
+    if (!files || files.length === 0) {
+      return res.status(404).json({ message: 'No files found' });
+    }
+
+    // If files found, return array of file information
+    return res.status(200).json(files.map(file => ({
+      fileName: file.fileName,
+      docType: file.docType,
+      fullName: file.fullName,
+      selectedDate: file.selectedDate,
+      path: file.path,
+      size: file.size,
+      mimetype: file.mimetype,
+      uploadedAt: file.uploadedAt
+    })));
+  } catch (error) {
+    console.error('Error fetching files:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+

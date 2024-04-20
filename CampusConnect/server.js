@@ -18,8 +18,6 @@ const cloudinary = require("./cloudinary/cloudinary");
 mongoose.connect(dbConnectionString, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('MongoDB connection error:', error));
-
-
   app.use(cors()); // Enable CORS
   app.use(bodyParser.json()); // Parse JSON request bodies
   app.use(express.json({ limit: '50mb' })); // Increased JSON payload limit

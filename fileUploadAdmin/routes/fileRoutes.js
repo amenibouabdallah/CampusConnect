@@ -3,5 +3,6 @@ const router = express.Router();
 const fileController = require('../controllers/fileController');
 
 router.post('/upload', fileController.uploadFile);
+router.get("/show",fileController.getAllFiles)
 
 module.exports = router;

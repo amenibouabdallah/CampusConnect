@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import profile from '../../assets/images/profile.png';
 import './Profile.css'
 import NavigationMenu from '../../shared/Navbar/Navbar';
+import axios from 'axios'
+import { useParams } from 'react-router-dom';
 
 const ProfilePage = () => {
+<<<<<<< Updated upstream
     // Données fictives pour un utilisateur
     const user = {
         fullName: 'Sami Samsoum',
@@ -12,16 +15,31 @@ const ProfilePage = () => {
         profilePicture: profile,
     };
 
+=======
+    const { t } = useTranslation();
+>>>>>>> Stashed changes
     // États pour gérer les champs du formulaire
-    const [fullName, setFullName] = useState(user.fullName);
-    const [email, setEmail] = useState(user.email);
-    const [password, setPassword] = useState(user.password);
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [newFullName, setNewFullName] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [profilePicture, setProfilePicture] = useState(user.profilePicture);
-
+    const [profilePicture, setProfilePicture] = useState('');
+    const [newpic,setNewpic] = useState('')
+    const {id} = useParams()
+    useEffect (()=>{
+        axios.get(`http://localhost:3000/updateuser/${id}`)
+        .then((res) =>{
+        setFullName(res.data.fullName)
+        setEmail(res.data.email)
+        setPassword(res.data.password)
+        setProfilePicture(res.data.profileImage)
+    }).catch((error) => {
+        console.log(error)
+    })
+    })
     // Fonctions de gestion des changements des champs
     const handleFullNameChange = (e) => {
         setNewFullName(e.target.value);
@@ -44,18 +62,21 @@ const ProfilePage = () => {
     };
 
     // Fonction de soumission du formulaire
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Logique de soumission du formulaire
-        console.log('Formulaire soumis !');
-        // Réinitialiser les états avec les données de l'utilisateur
-        setFullName(newFullName || user.fullName);
-        setEmail(newEmail || user.email);
-        setPassword(newPassword || user.password);
-        setNewFullName('');
-        setNewEmail('');
-        setNewPassword('');
-        setConfirmPassword('');
+    const handleSubmit = () => {
+        const data = {
+            fullName,
+            email,
+            password,
+            newpic
+          };
+          axios
+            .put(`http://localhost:3000/updateuser/${id}`, data)
+            .then(() => {
+              console.log("success")
+            })
+            .catch((error) => {
+              console.log(error);
+            });
     };
 
     return (
