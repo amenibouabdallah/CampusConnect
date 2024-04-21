@@ -7,7 +7,7 @@ const cloudinary = require('../cloudinary/cloudinary');
 const streamifier = require('streamifier');
 const path =require('path');
 const File = require('../models/File');
-
+const fs = require('fs');
 const getUserByEmail = async (req, res) => {
     try {
         const { _id } = req.body;
@@ -144,42 +144,52 @@ const storage = multer.diskStorage({
     });
   };
 
- /* const getDocuments = async (req, res) => {
+  const getDocuments = async (req, res) => {
     try {
         // Fetch files from both collections
-        const fileAdmin = await File.find();
         const filesConfirmed = await FileConfirmed.find();
-
+        const fileAdmin = await File.find();
         // Function to format a file document
         const formatFile = async (file, status) => {
             // Fetch the user based on uploadedBy field
             const user = await User.findById(file.uploadedBy);
+            let submitted;
+
+if (user) {
+    if (user.userType) {
+        submitted = user.fullName; 
+    } else {
+        submitted = 'Admin'; 
+    }
+} else {
+    submitted = 'Unknown'; 
+}
+
             
-            // Return the formatted file document
             return {
-                // Populate the fields
                 _id: file._id,
                 fullName: file.fullName,
                 selectedDate: file.selectedDate,
                 uploadedAt: file.uploadedAt,
                 docType: file.docType,
-                status: status, // 'pending' or 'accepted' depending on the collection
-                submittedBy: user ? user.fullName : 'Unknown User', // User's full name or 'Unknown User' if not found
+                status: status, 
+                submittedBy: submitted
+
             };
         };
 
-        // Format files from FileProfToConfirm collection
-        const formattedFilesToConfirm = await Promise.all(
-            filesToConfirm.map(file => formatFile(file, 'pending'))
-        );
+       
 
         // Format files from FileConfirmed collection
         const formattedFilesConfirmed = await Promise.all(
             filesConfirmed.map(file => formatFile(file, 'accepted'))
         );
+        const formattedFileAdmin = await Promise.all(
+            fileAdmin.map(file=>formatFile(file,'accepted'))
+        )
 
         // Combine formatted files
-        const allFormattedFiles = [...formattedFilesToConfirm, ...formattedFilesConfirmed];
+        const allFormattedFiles = [ ...formattedFilesConfirmed,...formattedFileAdmin];
 
         // Send response with the formatted files
         res.status(200).json(allFormattedFiles);
@@ -188,8 +198,19 @@ const storage = multer.diskStorage({
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-*/
+
+const downloadFile = async(req, res)=>{
+    const fileId=req.body;
+    let file=File.findById(fileId);
+    if(!file){
+        file=FileConfirmed.findById(fileId);
+    }
+    const filePath=file.path;
+    res.sendFile(filePath);
+    }
+
+
 module.exports = {
     getUserByEmail,
-    changePasswordOrEmailOrFullNameOrProfilePicture,uploadFile
+    changePasswordOrEmailOrFullNameOrProfilePicture,uploadFile,getDocuments,downloadFile
 };

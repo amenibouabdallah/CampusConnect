@@ -1,23 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import NavigationMenu from '../../shared/Navbar/Navbar';
 import dateUp from '../../assets/images/calendar-up.png';
 import dateDown from '../../assets/images/calendar-down.png';
 import './Docs-tab.css'
-const fakeData = [
-    { id: 1, name: 'Algèbre', creationDate: '2024-04-09T10:30:00', submissionDate: '2024-04-09T10:30:00', submittedBy: 'John Doe', documentType: 'Relevé des notes', status: 'Accepted' },
-    { id: 2, name: 'Conditionnel', creationDate: '2024-04-08T15:45:00', submissionDate: '2024-04-08T15:45:00', submittedBy: 'Jane Smith', documentType: 'Annonce', status: 'Pending' },
-    { id: 3, name: 'Scrum', creationDate: '2024-04-07T09:20:00', submissionDate: '2024-04-07T09:20:00', submittedBy: 'Alice Johnson', documentType: 'Emploi du temps', status: 'Accepted' },
-    { id: 4, name: 'Programmation', creationDate: '2024-04-06T11:55:00', submissionDate: '2024-04-06T11:55:00', submittedBy: 'Bob Brown', documentType: 'Relevé des notes', status: 'Pending' },
-    { id: 5, name: 'Géométrie', creationDate: '2024-04-05T16:30:00', submissionDate: '2024-04-05T16:30:00', submittedBy: 'Eve Wilson', documentType: 'Annonce', status: 'Accepted' },
-    { id: 6, name: 'Probabilité', creationDate: '2024-04-04T13:10:00', submissionDate: '2024-04-04T13:10:00', submittedBy: 'Alex Miller', documentType: 'Emploi du temps', status: 'Pending' },
-    { id: 7, name: 'Anglais', creationDate: '2024-04-03T14:25:00', submissionDate: '2024-04-03T14:25:00', submittedBy: 'David Clark', documentType: 'Relevé des notes', status: 'Accepted' },
-    { id: 8, name: 'Document8', creationDate: '2024-04-02T10:40:00', submissionDate: '2024-04-02T10:40:00', submittedBy: 'Sarah White', documentType: 'Annonce', status: 'Pending' },
-    { id: 9, name: 'Document9', creationDate: '2024-04-01T08:15:00', submissionDate: '2024-04-01T08:15:00', submittedBy: 'Michael Davis', documentType: 'Emploi du temps', status: 'Accepted' },
-    { id: 10, name: 'Document10', creationDate: '2024-03-31T17:50:00', submissionDate: '2024-03-31T17:50:00', submittedBy: 'Jessica Taylor', documentType: 'Relevé des notes', status: 'Pending' },
-    { id: 11, name: 'Document11', creationDate: '2024-03-30T12:35:00', submissionDate: '2024-03-30T12:35:00', submittedBy: 'William Brown', documentType: 'Annonce', status: 'Accepted' },
-    { id: 12, name: 'Document12', creationDate: '2024-03-29T09:10:00', submissionDate: '2024-03-29T09:10:00', submittedBy: 'Emily Johnson', documentType: 'Emploi du temps', status: 'Pending' }
-];
 const DocsUserTable = () => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
@@ -27,20 +13,91 @@ const DocsUserTable = () => {
     const [filterType, setFilterType] = useState('All');
     const [isNameSorted, setIsNameSorted] = useState(false);
     const [isStatusFiltered, setIsStatusFiltered] = useState(false);
-
-    const downloadDocument = (docId) => {
-        // Logic to download the document with id = docId
-        console.log(`Downloading document with id ${docId}`);
+    const [docData, setDocData]=useState([]);
+    const downloadDocument = async (docId) => {
+        if (!docId) {
+            console.error('Document ID is undefined');
+            return;
+        }
+    
+        try {
+            // Define the API endpoint for the downloadFile function
+            const url = 'http://localhost:3000/user/download-file'; // Adjust the URL to match your server's endpoint
+    
+            // Make a POST request to the server with the document ID in the request body
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fileId: docId }), // Send the document ID as JSON in the request body
+            });
+    
+            // Check if the response is successful
+            if (!response.ok) {
+                throw new Error(`Failed to download document: ${response.statusText}`);
+            }
+    
+            // Get the blob data from the response
+            const blob = await response.blob();
+    
+            // Create a URL for the blob data
+            const blobUrl = URL.createObjectURL(blob);
+    
+            // Create an anchor element to trigger the download
+            const anchor = document.createElement('a');
+            anchor.href = blobUrl;
+            anchor.download = `document_${docId}.pdf`; // Specify the desired file name and extension
+    
+            // Append the anchor to the document and click it to start the download
+            document.body.appendChild(anchor);
+            anchor.click();
+    
+            // Remove the anchor from the document after the download
+            document.body.removeChild(anchor);
+    
+            // Revoke the object URL to release memory
+            URL.revokeObjectURL(blobUrl);
+    
+            console.log(`Successfully downloaded document with id ${docId}`);
+        } catch (error) {
+            console.error(`Error downloading document with id ${docId}:`, error);
+        }
     };
+    
+    useEffect(()=>{
+        const fetchData = async () => {
+            try {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+ 
+                    }),
+                };
+                const response = await fetch('http://localhost:3000/user/get-docs', requestOptions); 
+                const data = await response.json();
+                setDocData(data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
 
-    const filteredData = fakeData.filter((doc) => {
-        const nameMatch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const submittedByMatch = doc.submittedBy.toLowerCase().includes(searchTerm.toLowerCase());
+        fetchData();
+    },[]);
 
+    const filteredData = docData.filter((doc) => {
+        // Use optional chaining and nullish coalescing operators to safely handle undefined properties
+        const nameMatch = (doc.name?.toLowerCase() ?? '').includes(searchTerm.toLowerCase());
+        const submittedByMatch = (doc.submittedBy?.toLowerCase() ?? '').includes(searchTerm.toLowerCase());
+    
+        // Check if the document matches the filter criteria
         if (filterStatus !== 'All' && doc.status !== filterStatus) {
             return false;
         }
-        if (filterType !== 'All' && doc.documentType !== filterType) {
+        if (filterType !== 'All' && doc.docType !== filterType) {
             return false;
         }
         if (searchTerm && !(nameMatch || submittedByMatch)) {
@@ -48,17 +105,31 @@ const DocsUserTable = () => {
         }
         return true;
     });
+    
 
     const sortedData = filteredData.slice().sort((a, b) => {
         if (sortColumn) {
-            if (a[sortColumn] < b[sortColumn]) {
+            let valueA = a[sortColumn];
+            let valueB = b[sortColumn];
+            
+            // Handle string comparison
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+                valueA = valueA.toLowerCase();
+                valueB = valueB.toLowerCase();
+            }
+            
+            // Compare the values
+            if (valueA < valueB) {
                 return sortDirection === 'asc' ? -1 : 1;
             }
-            if (a[sortColumn] > b[sortColumn]) {
+            if (valueA > valueB) {
                 return sortDirection === 'asc' ? 1 : -1;
             }
+            
+            // Return 0 if values are equal
             return 0;
         }
+        // No sort column specified, return 0
         return 0;
     });
 
@@ -115,13 +186,13 @@ const DocsUserTable = () => {
                         )}
                     </button>
 
-                    <button className='filter date-filter' onClick={() => handleSort('creationDate')}>{isStatusFiltered ? (
+                    <button className='filter date-filter' onClick={() => handleSort('selectedDate')}>{isStatusFiltered ? (
                         <img className='plus-trash' src={dateDown} alt="" />
                     ) : (
                         <img className='plus-trash' src={dateUp} alt="" />
 
                     )}</button>
-                    <button className='filter date-filter' onClick={() => handleSort('submissionDate')}>{isStatusFiltered ? (
+                    <button className='filter date-filter' onClick={() => handleSort('uploadedAt')}>{isStatusFiltered ? (
                         <img className='plus-trash' src={dateDown} alt="" />
                     ) : (
                         <img className='plus-trash' src={dateUp} alt="" />
@@ -129,14 +200,17 @@ const DocsUserTable = () => {
                     )}</button>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                         <option value="All">{t('docsTab.filters.allStatus')}</option>
-                        <option value="Pending">{t('docsTab.filters.pending')}</option>
                         <option value="Active">{t('docsTab.filters.approved')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-                        <option value="All">{t('docsTab.filters.allTypes')}</option>
-                        <option value="Relevé des notes">{t('docsTab.filters.gradeReport')}</option>
-                        <option value="Emploi du temps">{t('docsTab.filters.schedule')}</option>
-                        <option value="Annonce">{t('docsTab.filters.announcement')}</option>
+                    <option value="All">{t('docsTab.filters.allTypes')}</option>
+                        <option value="cours">{t('docsTab.filters.cours')}</option>
+                        <option value="tp">{t('docsTab.filters.tp')}</option>
+                        <option value="td">{t('docsTab.filters.td')}</option>
+                        <option value="exam">{t('docsTab.filters.exam')}</option>
+                        <option value="gradeReport">{t('docsTab.filters.gradeReport')}</option>
+                        <option value="schedule">{t('docsTab.filters.schedule')}</option>
+                        <option value="announcement">{t('docsTab.filters.announcement')}</option>
                     </select>
 
                 </div>
@@ -157,19 +231,19 @@ const DocsUserTable = () => {
                         </thead>
                         <tbody>
                             {sortedData.map((doc) => (
-                                <tr key={doc.id} >
+                                <tr key={doc._id} >
                                     <td ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFDA6F" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
                                         <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
                                         <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
                                     </svg></td>
-                                    <td >{doc.name}</td>
-                                    <td >{doc.creationDate}</td>
-                                    <td >{doc.submissionDate}</td>
+                                    <td >{doc.fullName}</td>
+                                    <td >{doc.selectedDate}</td>
+                                    <td >{doc.uploadedAt}</td>
                                     <td >{doc.status}</td>
-                                    <td >{doc.documentType}</td>
+                                    <td >{doc.docType}</td>
                                     <td >{doc.submittedBy}</td>
                                     <td>
-                                        <button className='gestion-btn' onClick={() => downloadDocument(doc.id)}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2D60B1" class="bi bi-download" viewBox="0 0 16 16">
+                                        <button className='gestion-btn' onClick={() => downloadDocument(doc._id)}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2D60B1" class="bi bi-download" viewBox="0 0 16 16">
                                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
                                             <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
                                         </svg></button>
