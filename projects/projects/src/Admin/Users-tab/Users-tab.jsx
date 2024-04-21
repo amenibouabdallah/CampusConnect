@@ -69,16 +69,23 @@ const UsersTable = () => {
         setShowPopup(true);
     };
 
-    const handleConfirmAction = (action) => {
+    const handleConfirmAction = async(action) => {
         // Implement logic based on the action
-        if (action === 'accept') {
-            console.log(`Accepted user with ID ${userIdToConfirm}`);
-        } else if (action === 'reject') {
-            console.log(`Rejected user with ID ${userIdToConfirm}`);
-        } else if (action === 'delete') {
-            console.log(`Deleted user with ID ${userIdToConfirm}`);
-        }
+      const  responseConfirmation = await axios.post('http://localhost:3000/admin/handle-confirm-action',{action, userIdToConfirm});
+      console.log(responseConfirmation.data);
         hideAllConfirmations();
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+
+            }),
+        };
+        const updatedResponse = await fetch('http://localhost:3000/admin/get-users', requestOptions); 
+        const data = await updatedResponse.json();
+        setUserData(data);
     };
 
     const hideAllConfirmations = () => {
@@ -227,7 +234,7 @@ const UsersTable = () => {
                         </thead>
                         <tbody>
     {sortedData.map((user) => (
-        <tr key={user.id}> {/* Add the key prop here using user.id */}
+        <tr key={user.id}> 
             <td onClick={() => handleRowClick(user.id)}>
                 <img className="prof-img-tab" src={user.profileImage} alt="Profile" />
             </td>

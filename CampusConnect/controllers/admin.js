@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const UserPending = require('../models/UserPending');
 const bcrypt = require('bcrypt');
-
+const nodemailer = require('nodemailer');
 const getUserByEmail = async (req, res) => {
     try {
         // Get the email from the request body
@@ -73,6 +73,7 @@ const getUsers = async (req, res) => {
         const filteredUserPending = userPending.filter(user => user.userType);
 
         const formattedUsers = filteredUsers.map(user => ({
+            id: user.id,
             profileImage: user.profileImage,
             fullName: user.fullName,
             status: 'active',  
@@ -83,6 +84,7 @@ const getUsers = async (req, res) => {
         }));
 
         const formattedUserPending = filteredUserPending.map(user => ({
+            id: user.id,
             profileImage: user.profileImage,
             fullName: user.fullName,
             status: 'pending',  
@@ -100,8 +102,81 @@ const getUsers = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+const handleConfirmAction = async (req, res) => {
+    const { action, userIdToConfirm } = req.body;
 
+    try {
+        if (action === 'accept') {
+            // Accept action: create new user in User module and delete user from UserPending
+            const userPending = await UserPending.findById(userIdToConfirm);
+            if (userPending) {
+                const newUser = new User({
+
+                    email: userPending.email,
+                    password: userPending.password,
+                    userType: userPending.userType,
+                    university: userPending.university,
+                    fullName: userPending.fullName,
+                    profileImage: userPending.profileImage
+                });
+                
+                // Save the new user to the User model
+                await newUser.save();
+
+                // Delete user from UserPending model
+                await UserPending.findByIdAndDelete(userIdToConfirm);
+
+                // Send email using nodemailer
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    host:'smtp.gmail.com',
+                    port:465,
+                    secure:true,
+                    auth: {
+                        user: 'amenybouabdallah@gmail.com',
+                        pass: 'xkti lxpm hbnx emlw',
+                    },
+                });
+
+                const mailOptions = {
+                    from: 'amenybouabdallah@gmail.com',
+                    to: newUser.email,
+                    subject: 'Account Accepted',
+                    text: 'Your account has been accepted. Welcome!',
+                };
+
+                await transporter.sendMail(mailOptions);
+
+                res.status(200).send(`Accepted user with ID ${userIdToConfirm}`);
+            } else {
+                res.status(404).send(`UserPending with ID ${userIdToConfirm} not found`);
+            }
+        } else if (action === 'reject') {
+            // Reject action: delete user from UserPending
+            const result = await UserPending.findByIdAndDelete(userIdToConfirm);
+            if (result) {
+                res.status(200).send(`Rejected user with ID ${userIdToConfirm}`);
+            } else {
+                res.status(404).send(`UserPending with ID ${userIdToConfirm} not found`);
+            }
+        } else if (action === 'delete') {
+            // Delete action: delete user from User
+            const result = await User.findByIdAndDelete(userIdToConfirm);
+            if (result) {
+                res.status(200).send(`Deleted user with ID ${userIdToConfirm}`);
+            } else {
+                res.status(404).send(`User with ID ${userIdToConfirm} not found`);
+            }
+        } else {
+            // Invalid action
+            res.status(400).send('Invalid action');
+        }
+    } catch (error) {
+        console.error(`Error handling action: ${action}`, error);
+        res.status(500).send('Internal server error');
+    }
+};
 
 module.exports = {
-    getUserByEmail,changePasswordOrEmail, getUsers
+    getUserByEmail,changePasswordOrEmail, getUsers, handleConfirmAction
 };
