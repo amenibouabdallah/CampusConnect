@@ -24,10 +24,10 @@ const AdminProfile = () => {
             if (token) {
                 try {
                     const decodedToken = jwtDecode(token);
-                    const email = decodedToken.email;
+                    const _id = decodedToken.userId;
 
                     // Make the POST request with the email
-                    const response = await axios.post('http://localhost:3000/admin/get-email', { email: email});
+                    const response = await axios.post('http://localhost:3000/admin/get-email', { _id: _id});
 
                     // Update the user state with the response data
                     console.log(response.data);
@@ -87,11 +87,13 @@ const AdminProfile = () => {
     
             console.log('Form submitted!');
     
-            setEmail(  user.email);
-            setPassword(newPassword || user.password);
+            setEmail(  newEmail || user.email);
+            setPassword( user.password);
             setNewEmail('');
             setNewPassword('');
             setConfirmPassword('');
+            const updatedResponse = await axios.post('http://localhost:3000/admin/get-email', { _id: user._id});
+            setUser(updatedResponse.data.user);
         } catch (error) {
             console.error('An error occurred:', error);
         }

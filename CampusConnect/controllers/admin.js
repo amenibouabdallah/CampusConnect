@@ -4,15 +4,13 @@ const bcrypt = require('bcrypt');
 const getUserByEmail = async (req, res) => {
     try {
         // Get the email from the request body
-        const { email } = req.body;
+        const { _id } = req.body;
 
         // Validate the input email
-        if (!email || typeof email !== 'string') {
-            return res.status(400).json({ message: 'Invalid email provided' });
-        }
+        
 
         // Find the user by email
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ _id });
 
         if (user) {
             // If user is found, return the user data

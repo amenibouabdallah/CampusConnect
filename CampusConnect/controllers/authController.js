@@ -176,9 +176,9 @@ const confirmCode = async (req,res) => {
           }
   
           // Assuming user.typeAccount represents the type of the account
-          let redirectPath = '/profile'; // default redirect path
-          if (user.email === 'amenybouabdallah@gmail.com') {
-              redirectPath = '/admin/users';
+          let redirectPath = '/admin/users'; // default redirect path
+          if ((user.userType === 'student') || (user.userType === 'teacher')) {
+              redirectPath = '/profile';
           }
   
           // JWT token generation

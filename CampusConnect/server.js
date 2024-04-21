@@ -6,6 +6,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const fileRoutes =require('./routes/fileRoutes');
 const admin = require('./routes/adminRoutes');
+const user = require('./routes/userRoutes');
 const bodyParser = require('body-parser');
 
 
@@ -32,6 +33,7 @@ mongoose.connect(dbConnectionString, { useNewUrlParser: true, useUnifiedTopology
   app.use('/auth', authRoutes);
   app.use('/api/files', fileRoutes);
   app.use('/admin', admin);
+  app.use('/user',user);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

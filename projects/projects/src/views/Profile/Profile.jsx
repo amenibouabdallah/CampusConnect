@@ -1,29 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import profile from '../../assets/images/profile.png';
 import { useTranslation } from 'react-i18next';
-import './Profile.css'
+import './Profile.css';
 import NavigationMenu from '../../shared/Navbar/Navbar';
+import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 const ProfilePage = () => {
-    // Données fictives pour un utilisateur
-    const user = {
-        fullName: 'Sami Samsoum',
-        email: 'sami@gmail.com',
-        password: '******',
-        profilePicture: profile,
-    };
-    const { t } = useTranslation();
-    // États pour gérer les champs du formulaire
-    const [fullName, setFullName] = useState(user.fullName);
-    const [email, setEmail] = useState(user.email);
-    const [password, setPassword] = useState(user.password);
+    const [user, setUser] = useState(null);
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [newFullName, setNewFullName] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [profilePicture, setProfilePicture] = useState(user.profilePicture);
+    const [profilePicture, setProfilePicture] = useState('');
+    const [profileImage, setProfileImage] = useState(null); // Updated
 
-    // Fonctions de gestion des changements des champs
+    const { t } = useTranslation();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const decodedToken = jwtDecode(token);
+                    const _id = decodedToken.userId;
+                    
+                    // Fetch user data
+                    const response = await axios.post('http://localhost:3000/user/get-email', { _id });
+                    
+                    // Update user state with response data
+                    setUser(response.data.user);
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            } else {
+                console.warn('No token found in localStorage');
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            setEmail(user.email);
+            setFullName(user.fullName);
+            setProfilePicture(user.profileImage);
+            setPassword('*****'); // Hide password
+        }
+    }, [user]);
+
+    // Handle input changes
     const handleFullNameChange = (e) => {
         setNewFullName(e.target.value);
     };
@@ -41,29 +71,65 @@ const ProfilePage = () => {
     };
 
     const handleProfilePictureChange = (e) => {
-        setProfilePicture(URL.createObjectURL(e.target.files[0]));
+        const file = e.target.files[0];
+        setProfilePicture(URL.createObjectURL(file));
+        setProfileImage(file);
     };
 
-    // Fonction de soumission du formulaire
-    const handleSubmit = (e) => {
+    // Handle form submission
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Logique de soumission du formulaire
-        console.log('Formulaire soumis !');
-        // Réinitialiser les états avec les données de l'utilisateur
-        setFullName(newFullName || user.fullName);
-        setEmail(newEmail || user.email);
-        setPassword(newPassword || user.password);
-        setNewFullName('');
-        setNewEmail('');
-        setNewPassword('');
-        setConfirmPassword('');
+
+        try {
+            // Create a FormData object for file upload and other data
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('newFullName', newFullName);
+            formData.append('newEmail', newEmail);
+            formData.append('newPassword', newPassword);
+            formData.append('confirmPassword', confirmPassword);
+            formData.append('profileImage', profileImage);
+
+            // Send the form data to the server
+            const token = localStorage.getItem('token');
+            const response = await axios.post(
+                'http://localhost:3000/user/change-name-or-email-or-pass-or-image',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            console.log(response.data);
+            console.log('Profile updated successfully.');
+
+            // Update the user data in state
+            setFullName(newFullName || user.fullName);
+            setEmail(newEmail || user.email);
+            setPassword(newPassword || user.password);
+
+            // Clear input fields
+            setNewFullName('');
+            setNewEmail('');
+            setNewPassword('');
+            setConfirmPassword('');
+
+            // Re-fetch the user data to keep the state in sync with the backend
+            const updatedResponse = await axios.post('http://localhost:3000/user/get-email', { _id: user._id });
+            setUser(updatedResponse.data.user);
+
+        } catch (error) {
+            console.error('Error updating user profile:', error);
+            // Optionally display an error message to the user
+        }
     };
 
     return (
         <div className='usermenu'>
-            <div>
-                <NavigationMenu />
-            </div>
+            <NavigationMenu />
             <div className='tab'>
                 <div className='profile-page'>
                     <form onSubmit={handleSubmit}>
@@ -71,15 +137,15 @@ const ProfilePage = () => {
                             <div className='profile-forms'>
                                 <div className='profile-img-btn'>
                                     {profilePicture && (
-                                        <img src={profilePicture} alt="Profile" className="profile-picture" />
+                                        <img src={profilePicture} alt='Profile' className='profile-picture' />
                                     )}
-                                    <label htmlFor="fileInput" className="custom-file-upload">
+                                    <label htmlFor='fileInput' className='custom-file-upload'>
                                         {t('profile.changeProfilePicture')}
                                     </label>
                                     <input
-                                        id="fileInput"
-                                        type="file"
-                                        accept="image/*"
+                                        id='fileInput'
+                                        type='file'
+                                        accept='image/*'
                                         onChange={handleProfilePictureChange}
                                         style={{ display: 'none' }}
                                     />
@@ -93,10 +159,14 @@ const ProfilePage = () => {
                                             <div>
                                                 <p className='current'>{fullName}</p>
                                                 <p className='new-label'>{t('profile.newFullName')}:</p>
-                                                <input className='profile-input' type="text" value={newFullName} onChange={handleFullNameChange} />
+                                                <input
+                                                    className='profile-input'
+                                                    type='text'
+                                                    value={newFullName}
+                                                    onChange={handleFullNameChange}
+                                                />
                                             </div>
                                         </div>
-
                                     </label>
                                     <br />
                                     <label className='prof-label'>
@@ -107,7 +177,12 @@ const ProfilePage = () => {
                                             <div>
                                                 <p className='current'>{email}</p>
                                                 <p className='new-label'>{t('profile.newEmail')}:</p>
-                                                <input className='profile-input' type="email" value={newEmail} onChange={handleEmailChange} />
+                                                <input
+                                                    className='profile-input'
+                                                    type='email'
+                                                    value={newEmail}
+                                                    onChange={handleEmailChange}
+                                                />
                                             </div>
                                         </div>
                                     </label>
@@ -120,9 +195,19 @@ const ProfilePage = () => {
                                             <div>
                                                 <p className='current'>{password}</p>
                                                 <p className='new-label'>{t('profile.newPassword')}:</p>
-                                                <input className='profile-input' type="password" value={newPassword} onChange={handlePasswordChange} />
+                                                <input
+                                                    className='profile-input'
+                                                    type='password'
+                                                    value={newPassword}
+                                                    onChange={handlePasswordChange}
+                                                />
                                                 <p className='new-label'>{t('profile.confirmPassword')}:</p>
-                                                <input className='profile-input' type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
+                                                <input
+                                                    className='profile-input'
+                                                    type='password'
+                                                    value={confirmPassword}
+                                                    onChange={handleConfirmPasswordChange}
+                                                />
                                             </div>
                                         </div>
                                     </label>
@@ -130,21 +215,27 @@ const ProfilePage = () => {
                                 </div>
                             </div>
                             <div className='profile-btns'>
-                                <button className='reset-btn' type="button" onClick={() => {
-                                    setNewFullName('');
-                                    setNewEmail('');
-                                    setNewPassword('');
-                                    setConfirmPassword('');
-                                }}>{t('profile.cancel')}</button>
-                                <button className='save-btn' type="submit">{t('profile.save')}</button>
+                                <button
+                                    className='reset-btn'
+                                    type='button'
+                                    onClick={() => {
+                                        setNewFullName('');
+                                        setNewEmail('');
+                                        setNewPassword('');
+                                        setConfirmPassword('');
+                                    }}
+                                >
+                                    {t('profile.cancel')}
+                                </button>
+                                <button className='save-btn' type='submit'>
+                                    {t('profile.save')}
+                                </button>
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
-
     );
 };
 
