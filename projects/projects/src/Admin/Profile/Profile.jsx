@@ -100,6 +100,9 @@ const AdminProfile = () => {
     };
 
 
+
+    
+
     return (
         <div className='d-flex align-items-center align-content-center'>
             <div className='sidebar'>
