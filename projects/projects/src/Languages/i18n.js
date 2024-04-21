@@ -78,6 +78,10 @@ const resources = {
                     pending: 'En attente',
                     approved: 'Approuvé',
                     allTypes: 'Tous les types',
+                    td:"Traveaux dirigée",
+                    cours:"Cours",
+                    tp:"Traveaux pratiqes",
+                    exam:"Examen",
                     gradeReport: 'Relevé des notes',
                     schedule: 'Emploi du temps',
                     announcement: 'Annonce'
@@ -265,6 +269,10 @@ const resources = {
                     pending: 'Pending',
                     approved: 'Approved',
                     allTypes: 'All types',
+                    td:"supervised series of works",
+                cours:"Courses",
+                tp:"Practical Work",
+                exam:"Exam",
                     gradeReport: 'Grade report',
                     schedule: 'Schedule',
                     announcement: 'Announcement'

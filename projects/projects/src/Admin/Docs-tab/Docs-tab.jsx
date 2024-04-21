@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import Sidebar from '../../shared/Sidebar/Sidebar';
@@ -11,23 +11,11 @@ import approve from '../../assets/images/approve.png';
 import supprimer from '../../assets/images/supprimer.png';
 import reject from '../../assets/images/reject.png';
 import './Docs-tab.css'
+import axios from 'axios';
 
 
 
-const fakeData = [
-    { id: 1, name: 'Algèbre', creationDate: '2024-04-09T10:30:00', submissionDate: '2024-04-09T10:30:00', submittedBy: 'John Doe', documentType: 'Relevé des notes', status: 'Accepted' },
-    { id: 2, name: 'Conditionnel', creationDate: '2024-04-08T15:45:00', submissionDate: '2024-04-08T15:45:00', submittedBy: 'Jane Smith', documentType: 'Annonce', status: 'Pending' },
-    { id: 3, name: 'Scrum', creationDate: '2024-04-07T09:20:00', submissionDate: '2024-04-07T09:20:00', submittedBy: 'Alice Johnson', documentType: 'Emploi du temps', status: 'Accepted' },
-    { id: 4, name: 'Programmation', creationDate: '2024-04-06T11:55:00', submissionDate: '2024-04-06T11:55:00', submittedBy: 'Bob Brown', documentType: 'Relevé des notes', status: 'Pending' },
-    { id: 5, name: 'Géométrie', creationDate: '2024-04-05T16:30:00', submissionDate: '2024-04-05T16:30:00', submittedBy: 'Eve Wilson', documentType: 'Annonce', status: 'Accepted' },
-    { id: 6, name: 'Probabilité', creationDate: '2024-04-04T13:10:00', submissionDate: '2024-04-04T13:10:00', submittedBy: 'Alex Miller', documentType: 'Emploi du temps', status: 'Pending' },
-    { id: 7, name: 'Anglais', creationDate: '2024-04-03T14:25:00', submissionDate: '2024-04-03T14:25:00', submittedBy: 'David Clark', documentType: 'Relevé des notes', status: 'Accepted' },
-    { id: 8, name: 'Document8', creationDate: '2024-04-02T10:40:00', submissionDate: '2024-04-02T10:40:00', submittedBy: 'Sarah White', documentType: 'Annonce', status: 'Pending' },
-    { id: 9, name: 'Document9', creationDate: '2024-04-01T08:15:00', submissionDate: '2024-04-01T08:15:00', submittedBy: 'Michael Davis', documentType: 'Emploi du temps', status: 'Accepted' },
-    { id: 10, name: 'Document10', creationDate: '2024-03-31T17:50:00', submissionDate: '2024-03-31T17:50:00', submittedBy: 'Jessica Taylor', documentType: 'Relevé des notes', status: 'Pending' },
-    { id: 11, name: 'Document11', creationDate: '2024-03-30T12:35:00', submissionDate: '2024-03-30T12:35:00', submittedBy: 'William Brown', documentType: 'Annonce', status: 'Accepted' },
-    { id: 12, name: 'Document12', creationDate: '2024-03-29T09:10:00', submissionDate: '2024-03-29T09:10:00', submittedBy: 'Emily Johnson', documentType: 'Emploi du temps', status: 'Pending' }
-];
+
 
 
 
@@ -44,7 +32,29 @@ const DocsTable = () => {
     const [showRejectConfirmation, setShowRejectConfirmation] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [docIdToConfirm, setDocIdToConfirm] = useState(null);
+    const [docData, setDocData]=useState([]);
+    useEffect(()=>{
+        const fetchData = async () => {
+            try {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+ 
+                    }),
+                };
+                const response = await fetch('http://localhost:3000/admin/get-docs', requestOptions); 
+                const data = await response.json();
+                setDocData(data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
 
+        fetchData();
+    },[]);
     const handleActionConfirmation = (action, id) => {
         if (action === 'accept') {
             setShowAcceptConfirmation(true);
@@ -55,18 +65,28 @@ const DocsTable = () => {
         }
         setDocIdToConfirm(id);
     };
+    console.log(docIdToConfirm);
 
 
-    const handleConfirmAction = (action) => {
+    const handleConfirmAction = async (action) => {
         // Implement logic based on the action
-        if (action === 'accept') {
-            console.log(`Accepted doc with ID ${docIdToConfirm}`);
-        } else if (action === 'reject') {
-            console.log(`Rejected doc with ID ${docIdToConfirm}`);
-        } else if (action === 'delete') {
-            console.log(`Deleted doc with ID ${docIdToConfirm}`);
-        }
-        hideAllConfirmations();
+       try{
+        const  responseConfirmation = await axios.post('http://localhost:3000/admin/handle-confirm-action-docs',{action, docIdToConfirm});
+        console.log(responseConfirmation.data);
+          hideAllConfirmations();
+          const requestOptions = {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+  
+              }),
+          };
+          const updatedResponse = await fetch('http://localhost:3000/admin/get-docs', requestOptions); 
+          const data = await updatedResponse.json();
+          setDocData(data);
+       }catch(error){console.error('Error handling confirmationaction:', error);}
     };
 
     const hideAllConfirmations = () => {
@@ -80,17 +100,14 @@ const DocsTable = () => {
         hideAllConfirmations();
     };
 
-    const filteredData = fakeData.filter((doc) => {
-        const nameMatch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const submittedByMatch = doc.submittedBy.toLowerCase().includes(searchTerm.toLowerCase());
-
+    const filteredData = docData.filter((doc) => {
         if (filterStatus !== 'All' && doc.status !== filterStatus) {
             return false;
         }
-        if (filterType !== 'All' && doc.documentType !== filterType) {
+        if (filterType !== 'All' && doc.docType !== filterType) {
             return false;
         }
-        if (searchTerm && !(nameMatch || submittedByMatch)) {
+        if (searchTerm && !doc.fullName.toLowerCase().includes(searchTerm.toLowerCase())) {
             return false;
         }
         return true;
@@ -98,14 +115,27 @@ const DocsTable = () => {
 
     const sortedData = filteredData.slice().sort((a, b) => {
         if (sortColumn) {
-            if (a[sortColumn] < b[sortColumn]) {
+            let valueA = a[sortColumn];
+            let valueB = b[sortColumn];
+            
+            // Handle string comparison
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+                valueA = valueA.toLowerCase();
+                valueB = valueB.toLowerCase();
+            }
+            
+            // Compare the values
+            if (valueA < valueB) {
                 return sortDirection === 'asc' ? -1 : 1;
             }
-            if (a[sortColumn] > b[sortColumn]) {
+            if (valueA > valueB) {
                 return sortDirection === 'asc' ? 1 : -1;
             }
+            
+            // Return 0 if values are equal
             return 0;
         }
+        // No sort column specified, return 0
         return 0;
     });
 
@@ -119,7 +149,6 @@ const DocsTable = () => {
         setIsNameSorted((prevState) => !prevState);
         setIsStatusFiltered((prevState) => !prevState);
     };
-
     return (
         <div className='d-flex align-items-center align-content-center'>
             <div className='sidebar'>
@@ -155,7 +184,7 @@ const DocsTable = () => {
                 </div>
                 {/* Filters */}
                 <div className='d-flex justify-content-around mb-2 mt-4 filters'>
-                    <button className='filter name-filter' onClick={() => handleSort('name')}>
+                    <button className='filter name-filter' onClick={() => handleSort('fullName')}>
                         {isNameSorted ? (
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
                                 <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z" />
@@ -171,13 +200,13 @@ const DocsTable = () => {
                         )}
                     </button>
 
-                    <button className='filter date-filter' onClick={() => handleSort('creationDate')}>{isStatusFiltered ? (
+                    <button className='filter date-filter' onClick={() => handleSort('selectedDate')}>{isStatusFiltered ? (
                         <img className='plus-trash' src={dateDown} alt="" />
                     ) : (
                         <img className='plus-trash' src={dateUp} alt="" />
 
                     )}</button>
-                    <button className='filter date-filter' onClick={() => handleSort('submissionDate')}>{isStatusFiltered ? (
+                    <button className='filter date-filter' onClick={() => handleSort('uploadedAt')}>{isStatusFiltered ? (
                         <img className='plus-trash' src={dateDown} alt="" />
                     ) : (
                         <img className='plus-trash' src={dateUp} alt="" />
@@ -185,14 +214,16 @@ const DocsTable = () => {
                     )}</button>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                         <option value="All">{t('docsTab.filters.allStatus')}</option>
-                        <option value="Pending">{t('docsTab.filters.pending')}</option>
-                        <option value="Active">{t('docsTab.filters.approved')}</option>
+                        <option value="pending">{t('docsTab.filters.pending')}</option>
+                        <option value="active">{t('docsTab.filters.approved')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
                         <option value="All">{t('docsTab.filters.allTypes')}</option>
-                        <option value="Relevé des notes">{t('docsTab.filters.gradeReport')}</option>
-                        <option value="Emploi du temps">{t('docsTab.filters.schedule')}</option>
-                        <option value="Annonce">{t('docsTab.filters.announcement')}</option>
+                        <option value="cours">{t('docsTab.filters.cours')}</option>
+                        <option value="tp">{t('docsTab.filters.tp')}</option>
+                        <option value="td">{t('docsTab.filters.td')}</option>
+                        <option value="exam">{t('docsTab.filters.exam')}</option>
+
                     </select>
                 </div>
                 {/* Table */}
@@ -217,24 +248,24 @@ const DocsTable = () => {
                                         <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
                                         <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
                                     </svg></td>
-                                    <td >{doc.name}</td>
-                                    <td >{doc.creationDate}</td>
-                                    <td >{doc.submissionDate}</td>
+                                    <td >{doc.fullName}</td>
+                                    <td >{doc.selectedDate}</td>
+                                    <td >{doc.uploadedAt}</td>
                                     <td >{doc.status}</td>
-                                    <td >{doc.documentType}</td>
+                                    <td >{doc.docType}</td>
                                     <td >{doc.submittedBy}</td>
                                     <td>
-                                        {doc.status === 'Pending' && (
+                                        {doc.status === 'pending' && (
                                             <>
-                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('accept', doc.id)}>
+                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('accept', doc._id)}>
                                                     <img className='gestion-icon' src={approuver} alt="" />
                                                 </button>
-                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('reject', doc.id)}>
+                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('reject', doc._id)}>
                                                     <img className='gestion-icon' src={refuse} alt="" />
                                                 </button>
                                             </>
                                         )}
-                                        <button className='gestion-btn' onClick={() => handleActionConfirmation('delete', doc.id)}>
+                                        <button className='gestion-btn' onClick={() => handleActionConfirmation('delete', doc._id)}>
                                             <img className='gestion-icon' src={trash} alt="" />
                                         </button>
                                     </td>

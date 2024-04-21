@@ -2,6 +2,8 @@ const User = require('../models/User');
 const UserPending = require('../models/UserPending');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
+const FileConfirmed= require('../models/FileConfirmed');
+const FileProfToConfirm=require('../models/FileProfToConfirm');
 const getUserByEmail = async (req, res) => {
     try {
         // Get the email from the request body
@@ -177,6 +179,100 @@ const handleConfirmAction = async (req, res) => {
     }
 };
 
+const getDocuments = async (req, res) => {
+    try {
+        // Fetch files from both collections
+        const filesToConfirm = await FileProfToConfirm.find();
+        const filesConfirmed = await FileConfirmed.find();
+
+        // Function to format a file document
+        const formatFile = async (file, status) => {
+            // Fetch the user based on uploadedBy field
+            const user = await User.findById(file.uploadedBy);
+            
+            // Return the formatted file document
+            return {
+                // Populate the fields
+                _id: file._id,
+                fullName: file.fullName,
+                selectedDate: file.selectedDate,
+                uploadedAt: file.uploadedAt,
+                docType: file.docType,
+                status: status, // 'pending' or 'accepted' depending on the collection
+                submittedBy: user ? user.fullName : 'Unknown User', // User's full name or 'Unknown User' if not found
+            };
+        };
+
+        // Format files from FileProfToConfirm collection
+        const formattedFilesToConfirm = await Promise.all(
+            filesToConfirm.map(file => formatFile(file, 'pending'))
+        );
+
+        // Format files from FileConfirmed collection
+        const formattedFilesConfirmed = await Promise.all(
+            filesConfirmed.map(file => formatFile(file, 'accepted'))
+        );
+
+        // Combine formatted files
+        const allFormattedFiles = [...formattedFilesToConfirm, ...formattedFilesConfirmed];
+
+        // Send response with the formatted files
+        res.status(200).json(allFormattedFiles);
+    } catch (error) {
+        console.error('Error fetching files:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+    
+const handleConfirmActionDocs = async (req, res)=>{
+    const{action,docIdToConfirm} = req.body;
+    try{
+        if (action ==='accept')
+        {
+            const filePending= await FileProfToConfirm.findById(docIdToConfirm);
+            if(filePending){
+                const newFile = new FileConfirmed({
+                    fileName:filePending.fileName,
+                    docType: filePending.docType,
+                    fullName:filePending.fullName,
+                    selectedDate:filePending.selectedDate,
+                    uploadedAt:filePending.uploadedAt,
+                    uploadedBy:filePending.uploadedBy,
+                    path:filePending.path,
+                    size:filePending.size,
+                    mimeType:filePending.mimeType
+                    
+                });
+                await newFile.save();
+                await FileProfToConfirm.findByIdAndDelete(docIdToConfirm);
+                res.status(200).json({message:'Document accepted'});
+            }
+            else{
+                res.status(404).json({message:'Document not found'});
+            }
+
+        }else if(action==='reject'){
+            const result = await FileProfToConfirm.findByIdAndDelete(docIdToConfirm);
+            if(result){
+                res.status(200).json({message:'Document rejected'});
+            }else{
+                res.status(404).json({message:'Document not found'});
+            }
+        }else if(action==='delete'){
+            const result = await FileConfirmed.findByIdAndDelete(docIdToConfirm);
+            if(result){
+                res.status(200).json({message:'Document deleted'});
+            }else{
+                res.status(404).json({message:'Document not found'});
+            }
+        }else {
+            res.status(400).json({message:'Invalid action'});
+        }
+    }catch(error){
+        console.error(`Error handling action: ${action}`, error);
+        res.status(500).json({message:'Internal server error'});
+    }
+}
 module.exports = {
-    getUserByEmail,changePasswordOrEmail, getUsers, handleConfirmAction
+    getUserByEmail,changePasswordOrEmail, getUsers, handleConfirmAction,getDocuments, handleConfirmActionDocs
 };
