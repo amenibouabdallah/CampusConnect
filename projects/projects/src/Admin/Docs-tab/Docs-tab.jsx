@@ -11,6 +11,7 @@ import approve from '../../assets/images/approve.png';
 import supprimer from '../../assets/images/supprimer.png';
 import reject from '../../assets/images/reject.png';
 import './Docs-tab.css'
+import '../Mobile-admin-style.css';
 import axios from 'axios';
 
 
@@ -32,8 +33,8 @@ const DocsTable = () => {
     const [showRejectConfirmation, setShowRejectConfirmation] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [docIdToConfirm, setDocIdToConfirm] = useState(null);
-    const [docData, setDocData]=useState([]);
-    useEffect(()=>{
+    const [docData, setDocData] = useState([]);
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const requestOptions = {
@@ -42,10 +43,10 @@ const DocsTable = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
- 
+
                     }),
                 };
-                const response = await fetch('http://localhost:3000/admin/get-docs', requestOptions); 
+                const response = await fetch('http://localhost:3000/admin/get-docs', requestOptions);
                 const data = await response.json();
                 setDocData(data);
             } catch (error) {
@@ -54,7 +55,7 @@ const DocsTable = () => {
         };
 
         fetchData();
-    },[]);
+    }, []);
     const handleActionConfirmation = (action, id) => {
         if (action === 'accept') {
             setShowAcceptConfirmation(true);
@@ -70,23 +71,23 @@ const DocsTable = () => {
 
     const handleConfirmAction = async (action) => {
         // Implement logic based on the action
-       try{
-        const  responseConfirmation = await axios.post('http://localhost:3000/admin/handle-confirm-action-docs',{action, docIdToConfirm});
-        console.log(responseConfirmation.data);
-          hideAllConfirmations();
-          const requestOptions = {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-  
-              }),
-          };
-          const updatedResponse = await fetch('http://localhost:3000/admin/get-docs', requestOptions); 
-          const data = await updatedResponse.json();
-          setDocData(data);
-       }catch(error){console.error('Error handling confirmationaction:', error);}
+        try {
+            const responseConfirmation = await axios.post('http://localhost:3000/admin/handle-confirm-action-docs', { action, docIdToConfirm });
+            console.log(responseConfirmation.data);
+            hideAllConfirmations();
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+
+                }),
+            };
+            const updatedResponse = await fetch('http://localhost:3000/admin/get-docs', requestOptions);
+            const data = await updatedResponse.json();
+            setDocData(data);
+        } catch (error) { console.error('Error handling confirmationaction:', error); }
     };
 
     const hideAllConfirmations = () => {
@@ -117,13 +118,13 @@ const DocsTable = () => {
         if (sortColumn) {
             let valueA = a[sortColumn];
             let valueB = b[sortColumn];
-            
+
             // Handle string comparison
             if (typeof valueA === 'string' && typeof valueB === 'string') {
                 valueA = valueA.toLowerCase();
                 valueB = valueB.toLowerCase();
             }
-            
+
             // Compare the values
             if (valueA < valueB) {
                 return sortDirection === 'asc' ? -1 : 1;
@@ -131,7 +132,7 @@ const DocsTable = () => {
             if (valueA > valueB) {
                 return sortDirection === 'asc' ? 1 : -1;
             }
-            
+
             // Return 0 if values are equal
             return 0;
         }
@@ -155,8 +156,8 @@ const DocsTable = () => {
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('docsTab.title')}</h2>
                     </div>
                     <div className='lang'>
@@ -183,51 +184,54 @@ const DocsTable = () => {
                     </div>
                 </div>
                 {/* Filters */}
-                <div className='d-flex justify-content-around mb-2 mt-4 filters'>
-                    <button className='filter name-filter' onClick={() => handleSort('fullName')}>
-                        {isNameSorted ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
-                                <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z" />
-                                <path fillRule="evenodd" d="M10.082 12.629 9.664 14H8.598l1.789-5.332h1.234L13.402 14h-1.12l-.419-1.371zm1.57-.785L11 9.688h-.047l-.652 2.156z" />
-                                <path d="M4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
-                            </svg>
+                <div className='filters'>
+                    <div className='filters1'>
+                        <button className='filter name-filter' onClick={() => handleSort('fullName')}>
+                            {isNameSorted ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
+                                    <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z" />
+                                    <path fillRule="evenodd" d="M10.082 12.629 9.664 14H8.598l1.789-5.332h1.234L13.402 14h-1.12l-.419-1.371zm1.57-.785L11 9.688h-.047l-.652 2.156z" />
+                                    <path d="M4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
+                                </svg>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down" viewBox="0 0 16 16">
+                                    <path fillRule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z" />
+                                    <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
+                                </svg>
+
+                            )}
+                        </button>
+
+                        <button className='filter date-filter' onClick={() => handleSort('selectedDate')}>{isStatusFiltered ? (
+                            <img className='plus-trash' src={dateDown} alt="" />
                         ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down" viewBox="0 0 16 16">
-                                <path fillRule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z" />
-                                <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
-                            </svg>
+                            <img className='plus-trash' src={dateUp} alt="" />
 
-                        )}
-                    </button>
+                        )}</button>
+                        <button className='filter date-filter' onClick={() => handleSort('uploadedAt')}>{isStatusFiltered ? (
+                            <img className='plus-trash' src={dateDown} alt="" />
+                        ) : (
+                            <img className='plus-trash' src={dateUp} alt="" />
 
-                    <button className='filter date-filter' onClick={() => handleSort('selectedDate')}>{isStatusFiltered ? (
-                        <img className='plus-trash' src={dateDown} alt="" />
-                    ) : (
-                        <img className='plus-trash' src={dateUp} alt="" />
-
-                    )}</button>
-                    <button className='filter date-filter' onClick={() => handleSort('uploadedAt')}>{isStatusFiltered ? (
-                        <img className='plus-trash' src={dateDown} alt="" />
-                    ) : (
-                        <img className='plus-trash' src={dateUp} alt="" />
-
-                    )}</button>
-                    <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                        <option value="All">{t('docsTab.filters.allStatus')}</option>
-                        <option value="pending">{t('docsTab.filters.pending')}</option>
-                        <option value="active">{t('docsTab.filters.approved')}</option>
-                    </select>
-                    <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-                        <option value="All">{t('docsTab.filters.allTypes')}</option>
-                        <option value="cours">{t('docsTab.filters.cours')}</option>
-                        <option value="tp">{t('docsTab.filters.tp')}</option>
-                        <option value="td">{t('docsTab.filters.td')}</option>
-                        <option value="exam">{t('docsTab.filters.exam')}</option>
-
-                    </select>
+                        )}</button>
+                    </div>
+                    <div className='filters2'>
+                        <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                            <option value="All">{t('docsTab.filters.allStatus')}</option>
+                            <option value="pending">{t('docsTab.filters.pending')}</option>
+                            <option value="active">{t('docsTab.filters.approved')}</option>
+                        </select>
+                        <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                            <option value="All">{t('docsTab.filters.allTypes')}</option>
+                            <option value="cours">{t('docsTab.filters.cours')}</option>
+                            <option value="tp">{t('docsTab.filters.tp')}</option>
+                            <option value="td">{t('docsTab.filters.td')}</option>
+                            <option value="exam">{t('docsTab.filters.exam')}</option>
+                        </select>
+                    </div>
                 </div>
                 {/* Table */}
-                <div className='d-flex justify-content-center users-tab-wrapper'>
+                <div className='d-flex flex-column users-tab-wrapper'>
                     <table className='users-tab'>
                         <thead>
                             <tr>

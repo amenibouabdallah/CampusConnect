@@ -11,6 +11,7 @@ function VerifyAccountReset() {
     const { t } = useTranslation();
     const [codes, setCodes] = useState(['', '', '', '', '', '']);
     const navigate = useNavigate();
+    const [showAlert, setShowAlert] = useState(false);
 
     const handleCodeChange = (e, index) => {
         const newCodes = [...codes];
@@ -28,6 +29,7 @@ function VerifyAccountReset() {
             navigate('/account/reset');
         } catch (error) {
             console.error('Error resetting profile profile:', error);
+            setShowAlert(true);
         }
     };
 
@@ -61,8 +63,9 @@ function VerifyAccountReset() {
                             ))}
                         </div>
                         <br />
-                        <button className='submit-button' type="submit">{t('verifyAccountReset.validate')}</button>
+                        <button className='submit-button' type="submit">{t('verifyAccount.validate')}</button>
                     </form>
+                    {showAlert && <p className='error-message'>{t('passwordReset.code')}</p>}
                 </div>
             </div>
             <div className='right-part'>

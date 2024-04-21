@@ -5,6 +5,7 @@ import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import logo from '../../assets/images/noBg-logo.png';
 import campus from '../../assets/images/Campus.jpg';
 import '../SignIn-SignUp.css';
+import '../SignIn-SignUp-mobile.css';
 import axios from 'axios';
 
 function SignIn() {
@@ -40,15 +41,10 @@ function SignIn() {
             setShowAlert(true);
         }
     };
-    
+
 
     return (
         <div className='login-view'>
-            {showAlert && (
-                <div className="alert alert-danger" role="alert">
-                    {t('login.incorrectCredentials')}
-                </div>
-            )}
             <div className='left-part'>
                 <div className='logolang'>
                     <div className='lang'>
@@ -59,7 +55,12 @@ function SignIn() {
                     </div>
                 </div>
                 <h1 className='title'>{t('login.welcome')}</h1>
-                <div >
+                <div className='d-flex flex-column align-items-center' >
+                    {showAlert && (
+                        <div className="alert alert-danger" role="alert">
+                            {t('login.incorrectCredentials')}
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit} className='login-form'>
                         <input
                             className='login-input'

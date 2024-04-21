@@ -82,8 +82,8 @@ function TransportTable() {
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('transportTable.title')}</h2>
                     </div>
                     <div className='lang'>
@@ -91,7 +91,7 @@ function TransportTable() {
                     </div>
 
                 </div>
-                <div className='d-flex justify-content-center '>
+                <div className='cont-resto'>
                     <form className='users-tab-wrapper1 trans-form' onSubmit={handleSubmit}>
                         <table className="table2">
                             {/* Table header */}

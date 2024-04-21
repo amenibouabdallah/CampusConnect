@@ -6,10 +6,7 @@ import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 import axios from 'axios';
 const AdminProfile = () => {
-
     /*fetching the user by token*/
-
-   
     const { t } = useTranslation();
     const [user, setUser] = useState(null); // Initialize user state as null
     const [email, setEmail] = useState('');
@@ -17,6 +14,8 @@ const AdminProfile = () => {
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,12 +26,12 @@ const AdminProfile = () => {
                     const _id = decodedToken.userId;
 
                     // Make the POST request with the email
-                    const response = await axios.post('http://localhost:3000/admin/get-email', { _id: _id});
+                    const response = await axios.post('http://localhost:3000/admin/get-email', { _id: _id });
 
                     // Update the user state with the response data
                     console.log(response.data);
                     setUser(response.data);
-                    
+
                 } catch (error) {
                     console.error('Error fetching user data:', error);
                     // Consider displaying an error message to the user
@@ -50,18 +49,10 @@ const AdminProfile = () => {
         if (user) {
             setEmail(user.user.email);
             setPassword('*****');
-            
+
         }
     }, [user]);
-    
-    
-
-
-    
-
     // Fonctions de gestion des changements des champs
-    
-
     const handleEmailChange = (e) => {
         setNewEmail(e.target.value);
     };
@@ -84,10 +75,10 @@ const AdminProfile = () => {
                 newPassword,
                 confirmPassword,
             });
-    
+
             console.log('Form submitted!');
-    
-            setEmail(  newEmail || user.email);
+
+            setEmail(newEmail || user.email);
             setPassword(newPassword || user.password);
 
 
@@ -97,25 +88,22 @@ const AdminProfile = () => {
             const token = localStorage.getItem('token');
             const decodedToken = jwtDecode(token);
             const _id = decodedToken.userId;
-            const updatedResponse = await axios.post('http://localhost:3000/admin/get-email', { _id: user._id});
+            const updatedResponse = await axios.post('http://localhost:3000/admin/get-email', { _id: user._id });
             setUser(updatedResponse.data.user);
+            setShowMessage(true);
         } catch (error) {
             console.error('An error occurred:', error);
+            setShowAlert(true);
         }
     };
-
-
-
-    
-
     return (
         <div className='d-flex align-items-center align-content-center'>
             <div className='sidebar'>
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('profile.title')}</h2>
                     </div>
                     <div className='lang'>
@@ -167,8 +155,9 @@ const AdminProfile = () => {
                                     <button className='save-btn1' type="submit">{t('profile.save')}</button>
                                 </div>
                             </div>
-
                         </form>
+                        {showAlert && <p className='error-message'>{t('profile.error')}</p>}
+                        {showMessage && <p className='true-message'>{t('profile.msg')}</p>}
                     </div>
                 </div>
             </div>

@@ -32,6 +32,7 @@ const resources = {
                 enit: 'ENIT',
                 fseg: 'FSEG',
                 signUpButton: 'S\'inscrire',
+                error:'Un compte avec cette adresse mail existe déjà'
             },
             completeProfile: {
                 welcome: 'Complétez votre profil !',
@@ -47,7 +48,9 @@ const resources = {
                 newPassword: 'Nouveau mot de passe',
                 confirmPassword: 'Confirmer mot de passe',
                 validate: 'Valider',
-                passwordsDoNotMatch: 'Les mots de passe ne correspondent pas.'
+                passwordsDoNotMatch: 'Les mots de passe ne correspondent pas.',
+                mailNoExist:"Ce compte n'existe pas",
+                code:"Code incorrect"
             },
             verifyAccount: {
                 verifyEmail: 'Vérifiez votre adresse mail !',
@@ -114,7 +117,9 @@ const resources = {
                 changeProfilePicture: 'Modifier photo de profil',
                 cancel: 'Annuler',
                 save: 'Enregistrer',
-                formSubmitted: 'Formulaire soumis !'
+                formSubmitted: 'Formulaire soumis !',
+                error:"Une erreur s'est produite lors de la modification du profil",
+                msg:"Votre profil a été modifié avec succès",
             },
             restoTab: {
                 title: 'Menu restaurant de la semaine',
@@ -156,7 +161,9 @@ const resources = {
                 schedule: "Emploi du temps",
                 fileName: "Nom du fichier",
                 uploadText: "Merci de joindre le document",
-                submit: "Déposer"
+                submit: "Déposer",
+                error:"Une erreur s'est produite lors du téléchargement du fichier",
+                msg:"Le document a été déposé avec succès",
             },
             usersTab: {
                 title:"Liste des utilisateurs",
@@ -223,6 +230,7 @@ const resources = {
                 enit: 'ENIT',
                 fseg: 'FSEG',
                 signUpButton: 'Sign Up',
+                error:'An account with this email address already exists'
             },
             completeProfile: {
                 welcome: 'Complete Your Profile!',
@@ -238,7 +246,9 @@ const resources = {
                 newPassword: 'New Password',
                 confirmPassword: 'Confirm Password',
                 validate: 'Validate',
-                passwordsDoNotMatch: 'Passwords do not match.'
+                passwordsDoNotMatch: 'Passwords do not match.',
+                mailNoExist:"This account does not exist",
+                code:"Incorrect code"
             },
             verifyAccount: {
                 verifyEmail: 'Verify your email address!',
@@ -305,7 +315,9 @@ const resources = {
                 changeProfilePicture: 'Change profile picture',
                 cancel: 'Cancel',
                 save: 'Save',
-                formSubmitted: 'Form submitted!'
+                formSubmitted: 'Form submitted!',
+                error:"An error occurred while editing the profile",
+                msg:"Your profile has been successfully edited",
             },
             restoTab: {
                 title: 'Restaurant menu of the week',
@@ -347,7 +359,9 @@ const resources = {
                 schedule: "Schedule",
                 fileName: "File Name",
                 uploadText: "Please attach the document",
-                submit: "Upload" 
+                submit: "Upload" ,
+                error:"An error occurred while uploading the file",
+                msg:"The document has been successfully uploaded",
             },
             usersTab: {
                 title:'List of users',

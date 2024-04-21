@@ -9,7 +9,8 @@ import axios from 'axios'
 function UploadFileAdmin() {
     const { t } = useTranslation();
     const [fullName, setFullName] = useState('');
-
+    const [showAlert, setShowAlert] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
     const handleNameChange = (e) => {
         setFullName(e.target.value);
     };
@@ -42,21 +43,23 @@ function UploadFileAdmin() {
         formData.append('docType', docType);
         formData.append('selectedDate', selectedDate);
 
-        try{
-            const response = await axios.post('http://localhost:3000/api/files/upload', formData,{
-                headers : {
-                    'Contet-Type':'multipart/form-data'
+        try {
+            const response = await axios.post('http://localhost:3000/api/files/upload', formData, {
+                headers: {
+                    'Contet-Type': 'multipart/form-data'
                 }
             });
             console.log(response);
-        }catch(error){
+            setShowMessage(true);
+        } catch (error) {
             console.log(error);
+            setShowAlert(true);
 
         }
 
 
 
-        
+
         // Votre logique de soumission du formulaire ici
         console.log('Formulaire soumis avec succès !');
         console.log('Nom du document:', fullName);
@@ -72,8 +75,8 @@ function UploadFileAdmin() {
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('uploadFile.title')}</h2>
                     </div>
                     <div className='lang'>
@@ -85,7 +88,7 @@ function UploadFileAdmin() {
                         <img className='upload-img' src={upload} alt="" />
                     </div>
                     <div className='upload-form-cont'>
-                        <form onSubmit={handleSubmit} className='login-form'>
+                        <form onSubmit={handleSubmit} className='login-form upload-form1'>
                             <input
                                 className='login-input upload'
                                 type="text"
@@ -129,6 +132,8 @@ function UploadFileAdmin() {
                             </label>
                             <button className='submit-button' type="submit">{t('uploadFile.submit')}</button>
                         </form>
+                        {showAlert && <p className='error-message'>{t('uploadFile.error')}</p>}
+                        {showMessage && <p className='true-message'>{t('uploadFile.msg')}</p>}
                     </div>
 
                 </div>

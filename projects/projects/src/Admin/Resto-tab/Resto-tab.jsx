@@ -90,16 +90,16 @@ const MealTable = () => {
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('restoTab.title')}</h2>
                     </div>
                     <div className='lang'>
                         <LanguageDropdown className="lang-bg-gris" />
                     </div>
                 </div>
-                <div className='d-flex justify-content-center'>
-                    <form className='d-flex flex-column align-items-center justify-content-center' onSubmit={handleSubmit}>
+                <div className='cont-resto tab-scroll'>
+                    <form className='users-tab-wrapper1' onSubmit={handleSubmit}>
                         <table className='meal-tab'>
                             <thead>
                                 <tr>

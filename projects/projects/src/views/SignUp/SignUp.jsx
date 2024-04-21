@@ -10,7 +10,7 @@ import axios from 'axios';
 
 function SignUp() {
     const { t } = useTranslation();
-
+    const [showAlert, setShowAlert] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userType, setUserType] = useState('');
@@ -45,6 +45,7 @@ function SignUp() {
 
             } catch (error) {
                 console.error('Error signing up:', error.response.data.message);
+                setShowAlert(true);
                 // Handle errors, e.g., display an error message to the user
             }
         } else {
@@ -96,6 +97,7 @@ function SignUp() {
                         </select>
                         <button className='submit-button' type="submit">{t('signUp.signUpButton')}</button>
                     </form>
+                    {showAlert && <p className='error-message'>{t('signUp.error')}</p>}
                 </div>
             </div>
             <div className='right-part'>
