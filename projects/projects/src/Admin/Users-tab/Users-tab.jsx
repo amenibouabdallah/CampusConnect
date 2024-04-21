@@ -236,7 +236,7 @@ const UsersTable = () => {
             <td onClick={() => handleRowClick(user.id)}>{user.userType}</td>
             <td onClick={() => handleRowClick(user.id)}>{user.dateCreated}</td>
             <td>
-                {user.status === 'Pending' && (
+                {user.status === 'pending' && (
                     <>
                         <button
                             className="gestion-btn"
