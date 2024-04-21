@@ -67,9 +67,11 @@ function UploadFileUser() {
                         />
                         <select className='login-input form-select upload' value={docType} onChange={handleDocTypeChange} required>
                             <option value="" disabled>{t('uploadFile.docTypePlaceholder')}</option>
-                            <option value="grades">{t('uploadFile.gradeReport')}</option>
-                            <option value="announcement">{t('uploadFile.announcement')}</option>
-                            <option value="schedule">{t('uploadFile.schedule')}</option>
+                            <option value="td">{t('uploadFile.td')}</option>
+                            <option value="tp">{t('uploadFile.tp')}</option>
+                            <option value="cours">{t('uploadFile.cours')}</option>
+                            <option value="exam">{t('uploadFile.exam')}</option>
+
                         </select>
                         <input
                             className='login-input upload cal'

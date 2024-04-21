@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const fileConfirmedSchema = new mongoose.Schema({
+const fileProfToConfirmSchema = new mongoose.Schema({
   fileName: {type: String},
   docType:{
     type: String,
@@ -14,6 +14,6 @@ const fileConfirmedSchema = new mongoose.Schema({
   uploadedBy:{type:String}
 });
 
-const File = mongoose.model('File', fileConfirmedSchema);
+const File = mongoose.model('File', fileProfToConfirmSchema);
 
 module.exports = File;

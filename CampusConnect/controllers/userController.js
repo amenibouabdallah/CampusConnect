@@ -4,6 +4,9 @@ const multer = require('multer');
 const cloudinary = require('../cloudinary/cloudinary');
 const streamifier = require('streamifier');
 
+
+
+
 const getUserByEmail = async (req, res) => {
     try {
         const { _id } = req.body;
@@ -89,6 +92,7 @@ const streamUpload = (buffer) => {
         streamifier.createReadStream(buffer).pipe(stream);
     });
 };
+
 
 module.exports = {
     getUserByEmail,
