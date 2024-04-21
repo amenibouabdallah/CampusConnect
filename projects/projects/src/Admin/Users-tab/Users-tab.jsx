@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import { useTranslation } from 'react-i18next';
 import Sidebar from '../../shared/Sidebar/Sidebar';
@@ -10,24 +10,8 @@ import dateDown from '../../assets/images/calendar-down.png';
 import approve from '../../assets/images/approve.png';
 import supprimer from '../../assets/images/supprimer.png';
 import reject from '../../assets/images/reject.png';
-import profile from '../../assets/images/profile.png';
 import './Users-tab.css';
-
-const fakeData = [
-    { id: 1, name: 'John Doe', status: 'Pending', userType: 'Student', lastVisit: '2024-04-09T10:30:00', profilePicture: profile, email: 'john.doe@example.com', university: 'FST' },
-    { id: 2, name: 'Jane Smith', status: 'Active', userType: 'Teacher', lastVisit: '2024-04-08T15:45:00', profilePicture: profile, email: 'jane.smith@example.com', university: 'FSEG' },
-    { id: 3, name: 'Alice Johnson', status: 'Active', userType: 'Student', lastVisit: '2024-04-07T09:20:00', profilePicture: profile, email: 'alice.johnson@example.com', university: 'ENIT' },
-    { id: 4, name: 'Bob Brown', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-06T11:55:00', profilePicture: profile, email: 'bob.brown@example.com', university: 'ENIT' },
-    { id: 5, name: 'Eve Wilson', status: 'Active', userType: 'Student', lastVisit: '2024-04-05T16:30:00', profilePicture: profile, email: 'eve.wilson@example.com', university: 'ENIT' },
-    { id: 6, name: 'Alex Miller', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-04T13:10:00', profilePicture: profile, email: 'alex.miller@example.com', university: 'FST' },
-    { id: 7, name: 'David Clark', status: 'Active', userType: 'Student', lastVisit: '2024-04-03T14:25:00', profilePicture: profile, email: 'david.clark@example.com', university: 'FSEG' },
-    { id: 8, name: 'Sarah White', status: 'Pending', userType: 'Teacher', lastVisit: '2024-04-02T10:40:00', profilePicture: profile, email: 'sarah.white@example.com', university: 'FST' },
-    { id: 9, name: 'Michael Davis', status: 'Active', userType: 'Student', lastVisit: '2024-04-01T08:15:00', profilePicture: profile, email: 'michael.davis@example.com', university: 'FST' },
-    { id: 10, name: 'Jessica Taylor', status: 'Pending', userType: 'Teacher', lastVisit: '2024-03-31T17:50:00', profilePicture: profile, email: 'jessica.taylor@example.com', university: 'FSEG' },
-    { id: 11, name: 'William Brown', status: 'Active', userType: 'Student', lastVisit: '2024-03-30T12:35:00', profilePicture: profile, email: 'william.brown@example.com', university: 'FSEG' },
-    { id: 12, name: 'Emily Johnson', status: 'Pending', userType: 'Teacher', lastVisit: '2024-03-29T09:10:00', profilePicture: profile, email: 'emily.johnson@example.com', university: 'FST' }
-];
-
+import axios from 'axios';
 const UsersTable = () => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
@@ -43,6 +27,31 @@ const UsersTable = () => {
     const [userIdToConfirm, setUserIdToConfirm] = useState(null);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
+    const [userData, setUserData] = useState([]); // State to hold the fetched user data
+
+    // Fetch user data from the server
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+ 
+                    }),
+                };
+                const response = await fetch('http://localhost:3000/admin/get-users', requestOptions); 
+                const data = await response.json();
+                setUserData(data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleActionConfirmation = (action, id) => {
         if (action === 'accept') {
@@ -54,6 +63,7 @@ const UsersTable = () => {
         }
         setUserIdToConfirm(id);
     };
+    
     const handleRowClick = (userId) => {
         setSelectedUserId(userId);
         setShowPopup(true);
@@ -82,14 +92,14 @@ const UsersTable = () => {
         hideAllConfirmations();
     };
 
-    const filteredData = fakeData.filter((user) => {
+    const filteredData = userData.filter((user) => {
         if (filterStatus !== 'All' && user.status !== filterStatus) {
             return false;
         }
         if (filterType !== 'All' && user.userType !== filterType) {
             return false;
         }
-        if (searchTerm && !user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+        if (searchTerm && !user.fullName.toLowerCase().includes(searchTerm.toLowerCase())) {
             return false;
         }
         return true;
@@ -97,14 +107,27 @@ const UsersTable = () => {
 
     const sortedData = filteredData.slice().sort((a, b) => {
         if (sortColumn) {
-            if (a[sortColumn] < b[sortColumn]) {
+            let valueA = a[sortColumn];
+            let valueB = b[sortColumn];
+            
+            // Handle string comparison
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+                valueA = valueA.toLowerCase();
+                valueB = valueB.toLowerCase();
+            }
+            
+            // Compare the values
+            if (valueA < valueB) {
                 return sortDirection === 'asc' ? -1 : 1;
             }
-            if (a[sortColumn] > b[sortColumn]) {
+            if (valueA > valueB) {
                 return sortDirection === 'asc' ? 1 : -1;
             }
+            
+            // Return 0 if values are equal
             return 0;
         }
+        // No sort column specified, return 0
         return 0;
     });
 
@@ -118,7 +141,6 @@ const UsersTable = () => {
         setIsNameSorted((prevState) => !prevState);
         setIsStatusFiltered((prevState) => !prevState);
     };
-
     return (
         <div className='d-flex align-items-center align-content-center'>
             <div className='sidebar'>
@@ -155,7 +177,7 @@ const UsersTable = () => {
                 </div>
                 {/* Filters */}
                 <div className='d-flex justify-content-center mb-2 mt-4'>
-                    <button className='filter name-filter' onClick={() => handleSort('name')}>
+                    <button className='filter name-filter' onClick={() => handleSort('fullName')}>
                         {isNameSorted ? (
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
                                 <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z" />
@@ -172,7 +194,7 @@ const UsersTable = () => {
                     </button>
 
 
-                    <button className='filter date-filter' onClick={() => handleSort('lastVisit')}>{isStatusFiltered ? (
+                    <button className='filter date-filter' onClick={() => handleSort('dateCreated')}>{isStatusFiltered ? (
                         <img className='plus-trash' src={dateDown} alt="" />
                     ) : (
                         <img className='plus-trash' src={dateUp} alt="" />
@@ -180,13 +202,13 @@ const UsersTable = () => {
                     )}</button>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                         <option value="All">{t('usersTab.filters.allStatus')}</option>
-                        <option value="Pending">{t('usersTab.filters.pending')}</option>
-                        <option value="Active">{t('usersTab.filters.active')}</option>
+                        <option value="pending">{t('usersTab.filters.pending')}</option>
+                        <option value="active">{t('usersTab.filters.active')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
                         <option value="All">{t('usersTab.filters.allTypes')}</option>
-                        <option value="Student">{t('usersTab.filters.student')}</option>
-                        <option value="Teacher">{t('usersTab.filters.teacher')}</option>
+                        <option value="student">{t('usersTab.filters.student')}</option>
+                        <option value="teacher">{t('usersTab.filters.teacher')}</option>
                     </select>
 
                 </div>
@@ -204,31 +226,43 @@ const UsersTable = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedData.map((user) => (
-                                <tr key={user.id} >
-                                    <td onClick={() => handleRowClick(user.id)}><img className='prof-img-tab' src={user.profilePicture} alt="Profile" /></td>
-                                    <td onClick={() => handleRowClick(user.id)}>{user.name}</td>
-                                    <td onClick={() => handleRowClick(user.id)}>{user.status}</td>
-                                    <td onClick={() => handleRowClick(user.id)}>{user.userType}</td>
-                                    <td onClick={() => handleRowClick(user.id)}>{user.lastVisit}</td>
-                                    <td>
-                                        {user.status === 'Pending' && (
-                                            <>
-                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('accept', user.id)}>
-                                                    <img className='gestion-icon' src={approuver} alt="" />
-                                                </button>
-                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('reject', user.id)}>
-                                                    <img className='gestion-icon' src={refuse} alt="" />
-                                                </button>
-                                            </>
-                                        )}
-                                        <button className='gestion-btn' onClick={() => handleActionConfirmation('delete', user.id)}>
-                                            <img className='gestion-icon' src={trash} alt="" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
+    {sortedData.map((user) => (
+        <tr key={user.id}> {/* Add the key prop here using user.id */}
+            <td onClick={() => handleRowClick(user.id)}>
+                <img className="prof-img-tab" src={user.profileImage} alt="Profile" />
+            </td>
+            <td onClick={() => handleRowClick(user.id)}>{user.fullName}</td>
+            <td onClick={() => handleRowClick(user.id)}>{user.status}</td>
+            <td onClick={() => handleRowClick(user.id)}>{user.userType}</td>
+            <td onClick={() => handleRowClick(user.id)}>{user.dateCreated}</td>
+            <td>
+                {user.status === 'Pending' && (
+                    <>
+                        <button
+                            className="gestion-btn"
+                            onClick={() => handleActionConfirmation('accept', user.id)}
+                        >
+                            <img className="gestion-icon" src={approuver} alt="Accept" />
+                        </button>
+                        <button
+                            className="gestion-btn"
+                            onClick={() => handleActionConfirmation('reject', user.id)}
+                        >
+                            <img className="gestion-icon" src={refuse} alt="Reject" />
+                        </button>
+                    </>
+                )}
+                <button
+                    className="gestion-btn"
+                    onClick={() => handleActionConfirmation('delete', user.id)}
+                >
+                    <img className="gestion-icon" src={trash} alt="Delete" />
+                </button>
+            </td>
+        </tr>
+    ))}
+</tbody>
+
                     </table>
                     {showAcceptConfirmation && (
                         <div className="dark-overlay">
@@ -296,18 +330,18 @@ const UsersTable = () => {
                                         </div>
                                         <div className='d-flex justify-content-around mb-5'>
                                             <div className='pop-img'>
-                                                <img className='pop-prof-img' src={fakeData[selectedUserId - 1].profilePicture} alt="Profile" />
+                                                <img className='pop-prof-img' src={userData[selectedUserId - 1].profileImage} alt="Profile" />
                                             </div>
                                             <div className='pop-up-right'>
-                                                <p className='pop-nom'>{fakeData[selectedUserId - 1].name}</p>
-                                                <p className='pop-type'>{fakeData[selectedUserId - 1].userType}</p>
+                                                <p className='pop-nom'>{userData[selectedUserId - 1].fullName}</p>
+                                                <p className='pop-type'>{userData[selectedUserId - 1].userType}</p>
                                             </div>
                                         </div>
                                         <div className='mb-5'>
                                             <p className='details'>{t('usersTab.popups.details')}</p>
-                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.id')}:</span>{fakeData[selectedUserId - 1].id}</p>
-                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.email')} :</span>{fakeData[selectedUserId - 1].email}</p>
-                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.university')} :</span>{fakeData[selectedUserId - 1].university}</p>
+                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.id')}:</span>{userData[selectedUserId - 1].id}</p>
+                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.email')} :</span>{userData[selectedUserId - 1].email}</p>
+                                            <p className='pop-detail'><span className='attr'>{t('usersTab.popups.university')} :</span>{userData[selectedUserId - 1].university}</p>
                                         </div>
                                     </div>
                                 )}

@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const UserPending = require('../models/UserPending');
 const bcrypt = require('bcrypt');
 
 const getUserByEmail = async (req, res) => {
@@ -63,8 +64,44 @@ const changePasswordOrEmail = async (req, res) => {
     }
 };
 
+const getUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        const userPending = await UserPending.find();
+
+        const filteredUsers = users.filter(user => user.userType);
+        const filteredUserPending = userPending.filter(user => user.userType);
+
+        const formattedUsers = filteredUsers.map(user => ({
+            profileImage: user.profileImage,
+            fullName: user.fullName,
+            status: 'active',  
+            dateCreated: user.dateCreated,
+            userType: user.userType,
+            email: user.email,
+            university: user.university,
+        }));
+
+        const formattedUserPending = filteredUserPending.map(user => ({
+            profileImage: user.profileImage,
+            fullName: user.fullName,
+            status: 'pending',  
+            dateCreated: user.dateCreated,
+            userType: user.userType,
+            email: user.email,
+            university: user.university,
+        }));
+
+        const allFormattedUsers = [...formattedUsers, ...formattedUserPending];
+
+        res.status(200).json(allFormattedUsers);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 
 module.exports = {
-    getUserByEmail,changePasswordOrEmail
+    getUserByEmail,changePasswordOrEmail, getUsers
 };

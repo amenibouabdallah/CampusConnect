@@ -6,6 +6,7 @@ const User = require('../models/User');
 const UserToConfirm = require('../models/UserToConfirm');
 const UserForgotPass = require('../models/UserForgotPass');
 const multer = require('multer');
+const UserPending = require('../models/UserPending');
 // Multer setup for file upload
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -135,7 +136,7 @@ const confirmCode = async (req,res) => {
             return res.status(404).json({ message: 'User not found' });
     }else{
     if(userToConfirm.verificationCode===verificationCode){
-        const user = new User({
+        const user = new UserPending({
             email: userToConfirm.email,
             password: userToConfirm.password, 
             userType: userToConfirm.userType,

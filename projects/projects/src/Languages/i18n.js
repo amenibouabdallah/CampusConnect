@@ -158,7 +158,7 @@ const resources = {
                     name: 'Nom & Prénom',
                     accountStatus: 'Statut du compte',
                     userType: 'Type d\'utilisateur',
-                    lastVisit: 'Dernière visite',
+                    lastVisit: 'Date de creation',
                     manageUser: 'Gérer utilisateur'
                 },
                 filters: {
@@ -341,7 +341,7 @@ const resources = {
                     name: 'Name & Surname',
                     accountStatus: 'Account Status',
                     userType: 'User Type',
-                    lastVisit: 'Last Visit',
+                    lastVisit: 'Creation Date',
                     manageUser: 'Manage User'
                 },
                 filters: {
