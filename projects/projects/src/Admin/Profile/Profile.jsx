@@ -88,10 +88,15 @@ const AdminProfile = () => {
             console.log('Form submitted!');
     
             setEmail(  newEmail || user.email);
-            setPassword( user.password);
+            setPassword(newPassword || user.password);
+
+
             setNewEmail('');
             setNewPassword('');
             setConfirmPassword('');
+            const token = localStorage.getItem('token');
+            const decodedToken = jwtDecode(token);
+            const _id = decodedToken.userId;
             const updatedResponse = await axios.post('http://localhost:3000/admin/get-email', { _id: user._id});
             setUser(updatedResponse.data.user);
         } catch (error) {
