@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import NavigationMenu from '../../shared/Navbar/Navbar';
 import upload from '../../assets/images/upload-img.png'
 import './Upload.css'
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; // Import the named export
 
 function UploadFileUser() {
     const { t } = useTranslation();
@@ -30,12 +32,36 @@ function UploadFileUser() {
     const handleDocTypeChange = (event) => {
         setDocType(event.target.value);
     };
+    
 
-    const handleSubmit = (event) => {
+    
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (!DocDepose) {
             console.log('Aucun fichier sélectionné.');
             return;
+        }
+        const token=localStorage.getItem('token');
+        const decodedToken= jwtDecode(token);
+        const uploadedBy= decodedToken.userId;
+        
+        const formData = new FormData();
+    formData.append('file', DocDepose);
+    formData.append('fullName', fullName);
+    formData.append('docType', docType);
+    formData.append('selectedDate', selectedDate);
+    formData.append('uploadedBy', uploadedBy);
+
+    try{
+            const response = await axios.post('http://localhost:3000/user/upload', formData,{
+                headers : {
+                    'Contet-Type':'multipart/form-data'
+                }
+            });
+            console.log(response);
+        }catch(error){
+            console.log(error);
+    
         }
         // Votre logique de soumission du formulaire ici
         console.log('Formulaire soumis avec succès !');

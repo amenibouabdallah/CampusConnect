@@ -14,6 +14,6 @@ const fileProfToConfirmSchema = new mongoose.Schema({
   uploadedBy:{type:String}
 });
 
-const File = mongoose.model('File', fileProfToConfirmSchema);
+const File = mongoose.model('FileProfToConfirm', fileProfToConfirmSchema);
 
 module.exports = File;
