@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const FileConfirmed= require('../models/FileConfirmed');
 const FileProfToConfirm=require('../models/FileProfToConfirm');
+const File = require('../models/File');
 const getUserByEmail = async (req, res) => {
     try {
         // Get the email from the request body
@@ -184,12 +185,23 @@ const getDocuments = async (req, res) => {
         // Fetch files from both collections
         const filesToConfirm = await FileProfToConfirm.find();
         const filesConfirmed = await FileConfirmed.find();
-
+        const fileAdmin = await File.find();
         // Function to format a file document
         const formatFile = async (file, status) => {
             // Fetch the user based on uploadedBy field
             const user = await User.findById(file.uploadedBy);
-            
+            let submitted;
+
+if (user) {
+    if (user.userType) {
+        submitted = user.fullName; // Assign user.fullName to submittedBy
+    } else {
+        submitted = 'Admin'; // Assign 'Admin' to submittedBy if userType is not teacher or student
+    }
+} else {
+    submitted = 'Unknown'; // Assign 'Unknown' to submittedBy if user does not exist
+}
+
             // Return the formatted file document
             return {
                 // Populate the fields
@@ -199,7 +211,8 @@ const getDocuments = async (req, res) => {
                 uploadedAt: file.uploadedAt,
                 docType: file.docType,
                 status: status, // 'pending' or 'accepted' depending on the collection
-                submittedBy: user ? user.fullName : 'Unknown User', // User's full name or 'Unknown User' if not found
+                submittedBy: submitted
+
             };
         };
 
@@ -212,9 +225,12 @@ const getDocuments = async (req, res) => {
         const formattedFilesConfirmed = await Promise.all(
             filesConfirmed.map(file => formatFile(file, 'accepted'))
         );
+        const formattedFileAdmin = await Promise.all(
+            fileAdmin.map(file=>formatFile(file,'accepted'))
+        )
 
         // Combine formatted files
-        const allFormattedFiles = [...formattedFilesToConfirm, ...formattedFilesConfirmed];
+        const allFormattedFiles = [...formattedFilesToConfirm, ...formattedFilesConfirmed,...formattedFileAdmin];
 
         // Send response with the formatted files
         res.status(200).json(allFormattedFiles);
@@ -259,7 +275,10 @@ const handleConfirmActionDocs = async (req, res)=>{
                 res.status(404).json({message:'Document not found'});
             }
         }else if(action==='delete'){
-            const result = await FileConfirmed.findByIdAndDelete(docIdToConfirm);
+            let result = await FileConfirmed.findByIdAndDelete(docIdToConfirm);
+            if (!result) {
+                result = await File.findByIdAndDelete(docIdToConfirm);
+            }
             if(result){
                 res.status(200).json({message:'Document deleted'});
             }else{

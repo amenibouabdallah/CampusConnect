@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import Sidebar from '../../shared/Sidebar/Sidebar';
 import upload from '../../assets/images/upload-img.png'
 import './Upload.css'
+import { jwtDecode } from 'jwt-decode'; // Import the named export
+
 import axios from 'axios'
 
 function UploadFileAdmin() {
@@ -36,12 +38,15 @@ function UploadFileAdmin() {
             console.log('Aucun fichier sélectionné.');
             return;
         }
+        const token=localStorage.getItem('token');
+        const decodedToken= jwtDecode(token);
+        const uploadedBy= decodedToken.userId;
         const formData = new FormData();
         formData.append('file', DocDepose);
         formData.append('fullName', fullName);
         formData.append('docType', docType);
         formData.append('selectedDate', selectedDate);
-
+        formData.append('uploadedBy', uploadedBy);
         try{
             const response = await axios.post('http://localhost:3000/api/files/upload', formData,{
                 headers : {

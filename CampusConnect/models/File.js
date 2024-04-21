@@ -10,7 +10,9 @@ const fileSchema = new mongoose.Schema({
   path: {type: String},
   size: {type: Number},
   mimetype: {type :String},
-  uploadedAt: { type: Date, default: Date.now }
+  uploadedAt: { type: Date, default: Date.now },
+  uploadedBy:{type:String}
+
 });
 
 const File = mongoose.model('File', fileSchema);

@@ -21,8 +21,8 @@ exports.uploadFile = (req, res) => {
     }
     try {
       const { filename, path, size, mimetype} = req.file;
-      const {fullName, selectedDate, docType} = req.body;
-      console.log(fullName, selectedDate, docType);
+      const {fullName, selectedDate, docType,uploadedBy} = req.body;
+      console.log(fullName, selectedDate, docType,);
       const file = new File({
        fileName: filename,
         path: path,
@@ -30,7 +30,8 @@ exports.uploadFile = (req, res) => {
         mimetype: mimetype,
         docType: docType,
         fullName: fullName,
-        selectedDate: selectedDate
+        selectedDate: selectedDate,
+        uploadedBy:uploadedBy
       });
       await file.save();
       File.find({})

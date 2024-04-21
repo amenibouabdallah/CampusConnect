@@ -215,7 +215,7 @@ const DocsTable = () => {
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                         <option value="All">{t('docsTab.filters.allStatus')}</option>
                         <option value="pending">{t('docsTab.filters.pending')}</option>
-                        <option value="active">{t('docsTab.filters.approved')}</option>
+                        <option value="accepted">{t('docsTab.filters.approved')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
                         <option value="All">{t('docsTab.filters.allTypes')}</option>
@@ -223,6 +223,10 @@ const DocsTable = () => {
                         <option value="tp">{t('docsTab.filters.tp')}</option>
                         <option value="td">{t('docsTab.filters.td')}</option>
                         <option value="exam">{t('docsTab.filters.exam')}</option>
+                        <option value="gradeReport">{t('docsTab.filters.gradeReport')}</option>
+                        <option value="schedule">{t('docsTab.filters.schedule')}</option>
+                        <option value="announcement">{t('docsTab.filters.announcement')}</option>
+
 
                     </select>
                 </div>
