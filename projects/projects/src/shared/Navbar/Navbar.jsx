@@ -7,12 +7,13 @@ import logo from '../../assets/images/noBg-logo.png';
 import profile from '../../assets/images/profile.png';
 import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown';
 import './Navbar.css';
-
+import axios from 'axios'
 const NavigationMenu = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [userRole, setUserRole] = useState(null);
-    
+    const [user, setUser]= useState('');
+
     useEffect(() => {
         // Retrieve the token from local storage
         const token = localStorage.getItem('token');
@@ -23,12 +24,34 @@ const NavigationMenu = () => {
             const decodedToken = jwtDecode(token);
             const role = decodedToken.userType; 
             console.log("Decoded token:", decodedToken);
-        console.log("User role:", role);
+        console.log("User role:", role);            
             // Set the user role
             setUserRole(role);
         }
     }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const decodedToken = jwtDecode(token);
+                    const _id = decodedToken.userId;
+                    
+                    // Fetch user data
+                    const response = await axios.post('http://localhost:3000/user/get-email', { _id });
+                    
+                    // Update user state with response data
+                    setUser(response.data.user);
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            } else {
+                console.warn('No token found in localStorage');
+            }
+        };
 
+        fetchData();
+    }, []);
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/');
@@ -60,7 +83,7 @@ const NavigationMenu = () => {
                     </button>
                 </div>
                 <NavLink className='profile' to="/profile">
-                    <img className='prof-img' src={profile} alt="Profile" />
+                    <img className='prof-img' src={user.profileImage} alt="Profile" />
                 </NavLink>
             </div>
         </nav>
