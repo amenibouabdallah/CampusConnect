@@ -84,8 +84,8 @@ const UsersTable = () => {
             }),
         };
         const updatedResponse = await fetch('http://localhost:3000/admin/get-users', requestOptions); 
-        const data = await updatedResponse.json();
-        setUserData(data);
+        const dataa = await updatedResponse.json();
+        setUserData(dataa);
     };
 
     const hideAllConfirmations = () => {

@@ -4,9 +4,23 @@ import LanguageDropdown from '../../shared/lang-dropdown/lang-dropdown'
 import logo from '../../assets/images/noBg-logo.png'
 import campus from '../../assets/images/Campus.jpg'
 import '../SignIn-SignUp.css'
+import { useNavigate } from 'react-router-dom';
+import  { useEffect } from 'react';
+
+
 
 function VerifyMessage() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            navigate('/');
+        }, 5000);
+
+        return () => clearTimeout(timeoutId);
+    }, [navigate]);
 
 
     return (
