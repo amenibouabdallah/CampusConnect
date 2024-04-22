@@ -171,11 +171,13 @@ option{
   font-size: small;
   color: red;
   text-align: center;
+  margin-top: 10px;
 }
 .true-message {
   font-size: small;
   color: green;
   text-align: center;
+  margin-top: 10px;
 }
 /* verify */
 .verify{

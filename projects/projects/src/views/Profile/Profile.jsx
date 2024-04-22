@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import './Profile.css';
 import NavigationMenu from '../../shared/Navbar/Navbar';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -17,6 +17,8 @@ const ProfilePage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
     const [profileImage, setProfileImage] = useState(null); // Updated
+    const [showAlert, setShowAlert] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
 
     const { t } = useTranslation();
 
@@ -27,10 +29,10 @@ const ProfilePage = () => {
                 try {
                     const decodedToken = jwtDecode(token);
                     const _id = decodedToken.userId;
-                    
+
                     // Fetch user data
                     const response = await axios.post('http://localhost:3000/user/get-email', { _id });
-                    
+
                     // Update user state with response data
                     setUser(response.data.user);
                 } catch (error) {
@@ -120,10 +122,12 @@ const ProfilePage = () => {
             // Re-fetch the user data to keep the state in sync with the backend
             const updatedResponse = await axios.post('http://localhost:3000/user/get-email', { _id: user._id });
             setUser(updatedResponse.data.user);
+            setShowMessage(true);
 
         } catch (error) {
             console.error('Error updating user profile:', error);
             // Optionally display an error message to the user
+            setShowAlert(true);
         }
     };
 
@@ -233,6 +237,8 @@ const ProfilePage = () => {
                             </div>
                         </div>
                     </form>
+                    {showAlert && <p className='error-message'>{t('profile.error')}</p>}
+                    {showMessage && <p className='true-message'>{t('profile.msg')}</p>}
                 </div>
             </div>
         </div>

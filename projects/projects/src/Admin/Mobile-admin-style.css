@@ -128,7 +128,26 @@
         width: 35%;
         font-size: 13px;
     }
+    button.save-btn {
+        width: 35%;
+        font-size: 13px;
+    }
+    button.reset-btn {
+        width: 35%;
+        font-size: 13px;
+    }
     .upload-form1{
         margin-top: 10px !important;
+    }
+    .profile-forms {
+        flex-direction: column;
+    }
+    .profile-img-btn {
+        width: 100%;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+    .usermenu {
+        overflow-y: hidden;
     }
 }
