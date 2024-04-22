@@ -1,5 +1,7 @@
 import React from 'react';
-import {Routes , Route } from "react-router-dom" 
+import { Routes, Route } from 'react-router-dom';
+
+// Import all your views
 import SignIn from '../views/SignIn/SignIn';
 import SignUp from '../views/SignUp/SignUp';
 import CompleteProfile from '../views/CompleteProfile/CompleteProfile';
@@ -19,29 +21,90 @@ import AdminProfile from '../Admin/Profile/Profile';
 import UsersTable from '../Admin/Users-tab/Users-tab';
 import DocsTable from '../Admin/Docs-tab/Docs-tab';
 import DocsUserTable from '../views/Docs-tab/Docs-tab';
+import ProtectedRoute from './ProtectedRoute';
+
 const MainRoutes = () => {
     return (
-    <Routes> 
-            <Route path="/" element={<SignIn/> } />
-            <Route path="/register" element={<SignUp/> } /> 
-            <Route path="/register/account" element={<CompleteProfile/> } /> 
-            <Route path="/account/verify-account" element={<VerifyAccount/> } /> 
-            <Route path="/account/verify-message" element={<VerifyMessage/> } /> 
-            <Route path="/account/reset/request" element={<PasswordResetMail/> } /> 
-            <Route path="/account/reset/verify" element={<VerifyAccountReset/> } /> 
-            <Route path="/account/reset" element={<PasswordReset/> } /> 
-            <Route path="/admin/meals" element={<MealTable/> } /> 
-            <Route path="/admin/transport" element={<TransportTable/> } /> 
-            <Route path="/meals" element={<UserMealTable/> } /> 
-            <Route path="/transport" element={<TransportTableUser/> } /> 
-            <Route path="/admin/upload" element={<UploadFileAdmin/> } /> 
-            <Route path="/upload" element={<UploadFileUser/> } /> 
-            <Route path="/profile" element={<ProfilePage/> } /> 
-            <Route path="/admin" element={<AdminProfile/> } /> 
-            <Route path="/admin/users" element={<UsersTable/> } /> 
-            <Route path="/admin/docs" element={<DocsTable/> } /> 
-            <Route path="/docs" element={<DocsUserTable/> } /> 
-    </Routes> 
+        <Routes>
+            <Route path="/" element={<SignIn />} />
+            <Route path="/register" element={<SignUp />} />
+            <Route path="/register/account" element={<CompleteProfile />} />
+            <Route path="/account/verify-account" element={<VerifyAccount />} />
+            <Route path="/account/verify-message" element={<VerifyMessage />} />
+            <Route path="/account/reset/request" element={<PasswordResetMail />} />
+            <Route path="/account/reset/verify" element={<VerifyAccountReset />} />
+            <Route path="/account/reset" element={<PasswordReset />} />
+
+            {/* Protected routes for user type */}
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute element={<ProfilePage />} allowedUserTypes={['student', 'teacher']} />
+                }
+            />
+            <Route
+                path="/meals"
+                element={
+                    <ProtectedRoute element={<UserMealTable />} allowedUserTypes={['student', 'teacher']} />
+                }
+            />
+            <Route
+                path="/transport"
+                element={
+                    <ProtectedRoute element={<TransportTableUser />} allowedUserTypes={['student', 'teacher']} />
+                }
+            />
+            <Route
+                path="/upload"
+                element={
+                    <ProtectedRoute element={<UploadFileUser />} allowedUserTypes={['student', 'teacher']} />
+                }
+            />
+            <Route
+                path="/docs"
+                element={
+                    <ProtectedRoute element={<DocsUserTable />} allowedUserTypes={['student', 'teacher']} />
+                }
+            />
+
+            {/* Protected routes for admin type */}
+            <Route
+                path="/admin"
+                element={
+                    <ProtectedRoute element={<AdminProfile />} allowedUserTypes={['admin']} />
+                }
+            />
+            <Route
+                path="/admin/meals"
+                element={
+                    <ProtectedRoute element={<MealTable />} allowedUserTypes={['admin']} />
+                }
+            />
+            <Route
+                path="/admin/transport"
+                element={
+                    <ProtectedRoute element={<TransportTable />} allowedUserTypes={['admin']} />
+                }
+            />
+            <Route
+                path="/admin/upload"
+                element={
+                    <ProtectedRoute element={<UploadFileAdmin />} allowedUserTypes={['admin']} />
+                }
+            />
+            <Route
+                path="/admin/users"
+                element={
+                    <ProtectedRoute element={<UsersTable />} allowedUserTypes={['admin']} />
+                }
+            />
+            <Route
+                path="/admin/docs"
+                element={
+                    <ProtectedRoute element={<DocsTable />} allowedUserTypes={['admin']} />
+                }
+            />
+        </Routes>
     );
 };
 
