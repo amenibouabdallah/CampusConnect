@@ -156,7 +156,7 @@ const DocsUserTable = () => {
                 </div>
                 {/* Filters */}
                 <div className='d-flex justify-content-around mb-2 mt-4 filters'>
-                    <button className='filter name-filter' onClick={() => handleSort('name')}>
+                    <button className='filter name-filter' onClick={() => handleSort('fullName')}>
                         {isNameSorted ? (
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
                                 <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z" />
@@ -186,7 +186,7 @@ const DocsUserTable = () => {
                     )}</button>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                         <option value="All">{t('docsTab.filters.allStatus')}</option>
-                        <option value="Active">{t('docsTab.filters.approved')}</option>
+                        <option value="accepted">{t('docsTab.filters.approved')}</option>
                     </select>
                     <select className='filter select-filter' value={filterType} onChange={(e) => setFilterType(e.target.value)}>
                     <option value="All">{t('docsTab.filters.allTypes')}</option>

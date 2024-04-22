@@ -17,7 +17,7 @@ function VerifyMessage() {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             navigate('/');
-        }, 5000);
+        }, 3000);
 
         return () => clearTimeout(timeoutId);
     }, [navigate]);

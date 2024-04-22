@@ -259,12 +259,17 @@ const UsersTable = () => {
                         </button>
                     </>
                 )}
-                <button
-                    className="gestion-btn"
-                    onClick={() => handleActionConfirmation('delete', user.id)}
-                >
-                    <img className="gestion-icon" src={trash} alt="Delete" />
-                </button>
+                {
+                    user.status==='active'&&(
+                        <button
+                        className="gestion-btn"
+                        onClick={() => handleActionConfirmation('delete', user.id)}
+                    >
+                        <img className="gestion-icon" src={trash} alt="Delete" />
+                    </button>
+                    )
+                }
+               
             </td>
         </tr>
     ))}

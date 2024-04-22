@@ -55,6 +55,39 @@ const DocsTable = () => {
 
         fetchData();
     },[]);
+    const downloadDocument = async (docId) => {
+        if (!docId) {
+            console.error('Document ID is undefined');
+            return;
+        }
+    
+        try {
+            // Send a POST request with the docId in the request body
+            const response = await axios.post(
+                'http://localhost:3000/admin/download-file',
+                { docId },
+                {
+                    // Specify the response type as 'blob' to handle the file download
+                    responseType: 'blob',
+                }
+            );
+    
+            // Create a blob URL for the file
+            const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+    
+            // Create an anchor element to trigger the download
+            const link = document.createElement('a');
+            link.href = fileURL;
+            link.setAttribute('download', `document_${docId}.pdf`); // Set the file name
+            document.body.appendChild(link);
+            link.click(); // Trigger the download
+            link.remove(); // Clean up the link element
+    
+            console.log(`Successfully downloaded document with id ${docId}`);
+        } catch (error) {
+            console.error(`Error downloading document with id ${docId}:`, error);
+        }
+    };
     const handleActionConfirmation = (action, id) => {
         if (action === 'accept') {
             setShowAcceptConfirmation(true);
@@ -259,19 +292,30 @@ const DocsTable = () => {
                                     <td >{doc.docType}</td>
                                     <td >{doc.submittedBy}</td>
                                     <td>
-                                        {doc.status === 'pending' && (
-                                            <>
-                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('accept', doc._id)}>
-                                                    <img className='gestion-icon' src={approuver} alt="" />
-                                                </button>
-                                                <button className='gestion-btn' onClick={() => handleActionConfirmation('reject', doc._id)}>
-                                                    <img className='gestion-icon' src={refuse} alt="" />
-                                                </button>
-                                            </>
-                                        )}
-                                        <button className='gestion-btn' onClick={() => handleActionConfirmation('delete', doc._id)}>
-                                            <img className='gestion-icon' src={trash} alt="" />
-                                        </button>
+                                    {
+  doc.status === 'pending' && (
+    <>
+      <button className='gestion-btn' onClick={() => handleActionConfirmation('accept', doc._id)}>
+        <img className='gestion-icon' src={approuver} alt="" />
+      </button>
+      <button className='gestion-btn' onClick={() => handleActionConfirmation('reject', doc._id)}>
+        <img className='gestion-icon' src={refuse} alt="" />
+      </button>
+    </>
+  )
+}
+
+{
+  doc.status === 'accepted' && (
+    <button className='gestion-btn' onClick={() => handleActionConfirmation('delete', doc._id)}>
+      <img className='gestion-icon' src={trash} alt="" />
+    </button>
+  )
+}
+<button className='gestion-btn' onClick={() => downloadDocument(doc._id)}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2D60B1" class="bi bi-download" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                        </svg></button>
                                     </td>
                                 </tr>
                             ))}
