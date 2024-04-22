@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import NavigationMenu from '../../shared/Navbar/Navbar';
 import dateUp from '../../assets/images/calendar-up.png';
 import dateDown from '../../assets/images/calendar-down.png';
+import axios from 'axios';
 import './Docs-tab.css'
+
 const DocsUserTable = () => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
@@ -14,56 +16,40 @@ const DocsUserTable = () => {
     const [isNameSorted, setIsNameSorted] = useState(false);
     const [isStatusFiltered, setIsStatusFiltered] = useState(false);
     const [docData, setDocData]=useState([]);
-    const downloadDocument = async (docId) => {
-        if (!docId) {
-            console.error('Document ID is undefined');
-            return;
-        }
-    
-        try {
-            // Define the API endpoint for the downloadFile function
-            const url = 'http://localhost:3000/user/download-file'; // Adjust the URL to match your server's endpoint
-    
-            // Make a POST request to the server with the document ID in the request body
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ fileId: docId }), // Send the document ID as JSON in the request body
-            });
-    
-            // Check if the response is successful
-            if (!response.ok) {
-                throw new Error(`Failed to download document: ${response.statusText}`);
+   const downloadDocument = async (docId) => {
+    if (!docId) {
+        console.error('Document ID is undefined');
+        return;
+    }
+
+    try {
+        // Send a POST request with the docId in the request body
+        const response = await axios.post(
+            'http://localhost:3000/user/download-file',
+            { docId },
+            {
+                // Specify the response type as 'blob' to handle the file download
+                responseType: 'blob',
             }
-    
-            // Get the blob data from the response
-            const blob = await response.blob();
-    
-            // Create a URL for the blob data
-            const blobUrl = URL.createObjectURL(blob);
-    
-            // Create an anchor element to trigger the download
-            const anchor = document.createElement('a');
-            anchor.href = blobUrl;
-            anchor.download = `document_${docId}.pdf`; // Specify the desired file name and extension
-    
-            // Append the anchor to the document and click it to start the download
-            document.body.appendChild(anchor);
-            anchor.click();
-    
-            // Remove the anchor from the document after the download
-            document.body.removeChild(anchor);
-    
-            // Revoke the object URL to release memory
-            URL.revokeObjectURL(blobUrl);
-    
-            console.log(`Successfully downloaded document with id ${docId}`);
-        } catch (error) {
-            console.error(`Error downloading document with id ${docId}:`, error);
-        }
-    };
+        );
+
+        // Create a blob URL for the file
+        const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+
+        // Create an anchor element to trigger the download
+        const link = document.createElement('a');
+        link.href = fileURL;
+        link.setAttribute('download', `document_${docId}.pdf`); // Set the file name
+        document.body.appendChild(link);
+        link.click(); // Trigger the download
+        link.remove(); // Clean up the link element
+
+        console.log(`Successfully downloaded document with id ${docId}`);
+    } catch (error) {
+        console.error(`Error downloading document with id ${docId}:`, error);
+    }
+};
+
     
     useEffect(()=>{
         const fetchData = async () => {

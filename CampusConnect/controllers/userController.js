@@ -199,15 +199,52 @@ if (user) {
     }
 };
 
-const downloadFile = async(req, res)=>{
-    const fileId=req.body;
-    let file=File.findById(fileId);
-    if(!file){
-        file=FileConfirmed.findById(fileId);
+const downloadFile = async (req, res) => {
+    try {
+        const { docId } = req.body;
+
+        // Ensure docId is provided
+        if (!docId) {
+            return res.status(400).json({ message: 'docId is required in the request body' });
+        }
+
+        // Fetch the file record from the database
+        let file = await File.findById(docId);
+        if (!file) {
+            file = await FileConfirmed.findById(docId);
+        }
+
+        if (!file) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        // Log the file path to debug potential issues
+        console.log('File path:', file.path);
+
+        // Verify if the file exists
+        if (!fs.existsSync(file.path)) {
+            return res.status(404).json({ message: 'File not found on the server' });
+        }
+
+        // Set the appropriate headers for the file download
+        res.set({
+            'Content-Type': 'application/octet-stream',
+            'Content-Disposition': `attachment; filename="${file.fullName}"`,
+        });
+
+        // Send the file as a response using a try-catch block
+        try {
+            res.sendFile(path.resolve(file.path));
+        } catch (error) {
+            console.error('Error sending file:', error);
+            return res.status(500).json({ message: 'Error sending file' });
+        }
+
+    } catch (error) {
+        console.error('Error downloading file:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-    const filePath=file.path;
-    res.sendFile(filePath);
-    }
+};
 
 
 module.exports = {
