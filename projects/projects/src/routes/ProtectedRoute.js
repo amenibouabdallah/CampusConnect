@@ -13,9 +13,9 @@ const ProtectedRoute = ({ element, allowedUserTypes }) => {
             return element;
         } else {
             if (userType) {
-                return <Navigate to="/profile" />;
+                return <Navigate to="/docs" />;
             } else {
-                return <Navigate to="/admin" />;
+                return <Navigate to="/admin/users" />;
             }
         }
     } else {

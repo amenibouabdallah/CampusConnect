@@ -35,10 +35,8 @@ const ProfilePage = () => {
                     
                     // Update user state with response data
                     setUser(response.data.user);
-                    setShowMessage(true);
                 } catch (error) {
                     console.error('Error fetching user data:', error);
-                    setShowAlert(true);
                 }
             } else {
                 console.warn('No token found in localStorage');
@@ -120,6 +118,7 @@ const ProfilePage = () => {
             setNewEmail('');
             setNewPassword('');
             setConfirmPassword('');
+            setShowMessage(true);
 
             // Re-fetch the user data to keep the state in sync with the backend
             const updatedResponse = await axios.post('http://localhost:3000/user/get-email', { _id: user._id });
@@ -128,6 +127,8 @@ const ProfilePage = () => {
         } catch (error) {
             console.error('Error updating user profile:', error);
             // Optionally display an error message to the user
+            setShowAlert(true);
+
         }
     };
 
