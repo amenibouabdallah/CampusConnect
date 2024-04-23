@@ -5,7 +5,8 @@ import dateUp from '../../assets/images/calendar-up.png';
 import dateDown from '../../assets/images/calendar-down.png';
 import axios from 'axios';
 import './Docs-tab.css'
-
+import './Docs-tab.css';
+import '../../Admin/Mobile-admin-style.css';
 const DocsUserTable = () => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
@@ -155,7 +156,8 @@ const DocsUserTable = () => {
                     </div>
                 </div>
                 {/* Filters */}
-                <div className='d-flex justify-content-around mb-2 mt-4 filters'>
+                <div className='filters'>
+                  <div className='filters1'>
                     <button className='filter name-filter' onClick={() => handleSort('fullName')}>
                         {isNameSorted ? (
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
@@ -184,6 +186,8 @@ const DocsUserTable = () => {
                         <img className='plus-trash' src={dateUp} alt="" />
 
                     )}</button>
+                    </div>
+                    <div className='filters2'>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                         <option value="All">{t('docsTab.filters.allStatus')}</option>
                         <option value="accepted">{t('docsTab.filters.approved')}</option>
@@ -198,10 +202,10 @@ const DocsUserTable = () => {
                         <option value="schedule">{t('docsTab.filters.schedule')}</option>
                         <option value="announcement">{t('docsTab.filters.announcement')}</option>
                     </select>
-
+</div>
                 </div>
                 {/* Table */}
-                <div className='d-flex justify-content-center users-tab-wrapper'>
+                <div className='d-flex flex-column users-tab-wrapper'>
                     <table className='users-tab'>
                         <thead>
                             <tr>

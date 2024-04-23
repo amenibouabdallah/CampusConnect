@@ -17,7 +17,8 @@ const AdminProfile = () => {
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const [showAlert, setShowAlert] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             const token = localStorage.getItem('token');
@@ -99,8 +100,10 @@ const AdminProfile = () => {
             const _id = decodedToken.userId;
             const updatedResponse = await axios.post('http://localhost:3000/admin/get-email', { _id: user._id});
             setUser(updatedResponse.data.user);
+            setShowMessage(true);
         } catch (error) {
             console.error('An error occurred:', error);
+            setShowAlert(true);
         }
     };
 
@@ -114,8 +117,8 @@ const AdminProfile = () => {
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('profile.title')}</h2>
                     </div>
                     <div className='lang'>
@@ -169,6 +172,8 @@ const AdminProfile = () => {
                             </div>
 
                         </form>
+                        {showAlert && <p className='error-message'>{t('profile.error')}</p>}
+                        {showMessage && <p className='true-message'>{t('profile.msg')}</p>}
                     </div>
                 </div>
             </div>

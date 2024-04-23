@@ -5,13 +5,12 @@ import Sidebar from '../../shared/Sidebar/Sidebar';
 import upload from '../../assets/images/upload-img.png'
 import './Upload.css'
 import { jwtDecode } from 'jwt-decode'; // Import the named export
-
 import axios from 'axios'
-
 function UploadFileAdmin() {
     const { t } = useTranslation();
     const [fullName, setFullName] = useState('');
-
+    const [showAlert, setShowAlert] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
     const handleNameChange = (e) => {
         setFullName(e.target.value);
     };
@@ -77,8 +76,8 @@ function UploadFileAdmin() {
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('uploadFile.title')}</h2>
                     </div>
                     <div className='lang'>
@@ -90,7 +89,7 @@ function UploadFileAdmin() {
                         <img className='upload-img' src={upload} alt="" />
                     </div>
                     <div className='upload-form-cont'>
-                        <form onSubmit={handleSubmit} className='login-form'>
+                        <form onSubmit={handleSubmit} className='login-form upload-form1'>
                             <input
                                 className='login-input upload'
                                 type="text"
@@ -134,6 +133,8 @@ function UploadFileAdmin() {
                             </label>
                             <button className='submit-button' type="submit">{t('uploadFile.submit')}</button>
                         </form>
+                        {showAlert && <p className='error-message'>{t('uploadFile.error')}</p>}
+                        {showMessage && <p className='true-message'>{t('uploadFile.msg')}</p>}
                     </div>
 
                 </div>

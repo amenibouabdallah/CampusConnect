@@ -54,8 +54,8 @@ function PasswordResetMail() {
                         />
                         <button className='submit-button' type="submit">{t('passwordReset.validate')}</button>
                     </form>
-                    {showAlert && <p className='error-message'>{t('passwordReset.passwordsDoNotMatch')}</p>}
-                </div>
+                    {showAlert && <p className='error-message'>{t('passwordReset.mailNoExist')}</p>}
+                                    </div>
             </div>
             <div className='right-part'>
                 <img className='campus' src={campus} alt="" />

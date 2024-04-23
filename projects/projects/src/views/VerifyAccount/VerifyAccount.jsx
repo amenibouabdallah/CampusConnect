@@ -12,7 +12,7 @@ function VerifyAccount() {
     const { t } = useTranslation();
     const [codes, setCodes] = useState(['', '', '', '', '', '']);
     const navigate = useNavigate();
-
+    const [showAlert, setShowAlert] = useState(false);
     const handleCodeChange = (e, index) => {
         const newCodes = [...codes];
         newCodes[index] = e.target.value;
@@ -29,6 +29,7 @@ function VerifyAccount() {
             navigate('/account/verify-message');
         } catch (error) {
             console.error('Error verifying profile:', error);
+            setShowAlert(true);
         }
     };
 
@@ -65,6 +66,7 @@ function VerifyAccount() {
                         <button className='submit-button' type="submit">{t('verifyAccount.validate')}</button>
 
                     </form>
+                    {showAlert && <p className='error-message'>{t('passwordReset.code')}</p>}
                 </div>
             </div>
             <div className='right-part'>

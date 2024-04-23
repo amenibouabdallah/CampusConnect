@@ -17,6 +17,8 @@ const ProfilePage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
     const [profileImage, setProfileImage] = useState(null); // Updated
+    const [showAlert, setShowAlert] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
 
     const { t } = useTranslation();
 
@@ -33,8 +35,10 @@ const ProfilePage = () => {
                     
                     // Update user state with response data
                     setUser(response.data.user);
+                    setShowMessage(true);
                 } catch (error) {
                     console.error('Error fetching user data:', error);
+                    setShowAlert(true);
                 }
             } else {
                 console.warn('No token found in localStorage');
@@ -233,6 +237,8 @@ const ProfilePage = () => {
                             </div>
                         </div>
                     </form>
+                    {showAlert && <p className='error-message'>{t('profile.error')}</p>}
+                    {showMessage && <p className='true-message'>{t('profile.msg')}</p>}
                 </div>
             </div>
         </div>

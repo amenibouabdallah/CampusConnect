@@ -3,7 +3,7 @@ import { useMenu } from '../../shared/MenuContext';
 import NavigationMenu from '../../shared/Navbar/Navbar';
 import { useTranslation } from 'react-i18next'; // Ajout de l'import pour utiliser la traduction
 import './Resto-tab.css';
-
+import '../Mobile-viewer-style.css';
 function UserMealTable() {
     const { menuData } = useMenu();
     const { t } = useTranslation(); // Utilisation du hook useTranslation pour accéder aux traductions
@@ -13,8 +13,8 @@ function UserMealTable() {
             <div>
                 <NavigationMenu />
             </div>
-            <div className='tab'>
-                <table className='meal-tab'>
+            <div className='tab users-tab-wrapper1'>
+                <table className='meal-tab viewers-meal-tab'>
                     <thead>
                         <tr>
                             <th className='semi-thead'>{t('restoTab.meal')}</th>

@@ -11,7 +11,7 @@ function VerifyAccountReset() {
     const { t } = useTranslation();
     const [codes, setCodes] = useState(['', '', '', '', '', '']);
     const navigate = useNavigate();
-
+    const [showAlert, setShowAlert] = useState(false);
     const handleCodeChange = (e, index) => {
         const newCodes = [...codes];
         newCodes[index] = e.target.value;
@@ -28,6 +28,7 @@ function VerifyAccountReset() {
             navigate('/account/reset');
         } catch (error) {
             console.error('Error resetting profile profile:', error);
+            setShowAlert(true);
         }
     };
 
@@ -61,7 +62,7 @@ function VerifyAccountReset() {
                             ))}
                         </div>
                         <br />
-                        <button className='submit-button' type="submit">{t('verifyAccountReset.validate')}</button>
+                        <button className='submit-button' type="submit">{t('verifyAccount.validate')}</button>
                     </form>
                 </div>
             </div>

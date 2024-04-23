@@ -13,6 +13,7 @@ const NavigationMenu = () => {
     const navigate = useNavigate();
     const [userRole, setUserRole] = useState(null);
     const [user, setUser]= useState('');
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         // Retrieve the token from local storage
@@ -70,21 +71,40 @@ const NavigationMenu = () => {
                     <NavLink className='nav' to="/upload" activeClassName="active">{t('navigationMenu.uploadDocument')}</NavLink>
                 )}
             </div>
+            <div>
+                <div className="mobile-menu-icon" onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                </div>
+            </div>
+
+            <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+                <NavLink className='nav' exact to="/docs" activeClassName="active">{t('navigationMenu.documents')}</NavLink>
+                <NavLink className='nav' to="/meals" activeClassName="active">{t('navigationMenu.menu')}</NavLink>
+                <NavLink className='nav' to="/transport" activeClassName="active">{t('navigationMenu.transport')}</NavLink>
+                {userRole === "teacher" && (
+                    <NavLink className='nav' to="/upload" activeClassName="active">{t('navigationMenu.uploadDocument')}</NavLink>
+                )}
+                <div className="profile-lang">
+                    <NavLink className='profile' to="/profile">
+                        <img className='prof-img' src={profile} alt="Profile" />
+                    </NavLink>
+                    <div className="logout">
+                        <button className='gestion-btn' onClick={handleLogout}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFDA6F" className="bi bi-power" viewBox="0 0 16 16">
+                                <path d="M7.5 1v7h1V1z" />
+                                <path d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div className="profile-lang">
-                <div className='lang'>
+                <div className='lang-nav'>
                     <LanguageDropdown className="lang-bg-gris" />
                 </div>
-                <div className='logout'>
-                    <button className='gestion-btn' onClick={handleLogout}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFDA6F" class="bi bi-power" viewBox="0 0 16 16">
-                            <path d="M7.5 1v7h1V1z" />
-                            <path d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
-                        </svg>
-                    </button>
-                </div>
-                <NavLink className='profile' to="/profile">
-                    <img className='prof-img' src={user.profileImage} alt="Profile" />
-                </NavLink>
+             
             </div>
         </nav>
     );

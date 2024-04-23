@@ -11,6 +11,7 @@ import approve from '../../assets/images/approve.png';
 import supprimer from '../../assets/images/supprimer.png';
 import reject from '../../assets/images/reject.png';
 import './Users-tab.css';
+import '../Mobile-admin-style.css';
 import axios from 'axios';
 const UsersTable = () => {
     const { t } = useTranslation();
@@ -154,8 +155,8 @@ const UsersTable = () => {
                 <Sidebar />
             </div>
             <div className='resto-tab'>
-                <div className='d-flex justify-content-between align-items-center align-content-center mb-5 mt-3'>
-                    <div className='title'>
+                <div className='admin-head'>
+                    <div className='title1'>
                         <h2>{t('usersTab.title')}</h2>
                     </div>
                     <div className='lang'>
@@ -183,7 +184,8 @@ const UsersTable = () => {
                     </div>
                 </div>
                 {/* Filters */}
-                <div className='d-flex justify-content-center mb-2 mt-4'>
+                <div className='filtres filters'>
+                <div className='filters1'>
                     <button className='filter name-filter' onClick={() => handleSort('fullName')}>
                         {isNameSorted ? (
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
@@ -207,6 +209,8 @@ const UsersTable = () => {
                         <img className='plus-trash' src={dateUp} alt="" />
 
                     )}</button>
+                    </div>
+                    <div className='filters2'>
                     <select className='filter select-filter' value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                         <option value="All">{t('usersTab.filters.allStatus')}</option>
                         <option value="pending">{t('usersTab.filters.pending')}</option>
@@ -217,10 +221,10 @@ const UsersTable = () => {
                         <option value="student">{t('usersTab.filters.student')}</option>
                         <option value="teacher">{t('usersTab.filters.teacher')}</option>
                     </select>
-
+                    </div>
                 </div>
                 {/* Table */}
-                <div className='d-flex justify-content-center users-tab-wrapper'>
+                <div className='d-flex flex-column users-tab-wrapper'>
                     <table className='users-tab'>
                         <thead>
                             <tr>

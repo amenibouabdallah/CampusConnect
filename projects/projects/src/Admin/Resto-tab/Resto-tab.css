@@ -73,3 +73,13 @@ table {
 .other{
     width: 50%;
 }
+.cont-resto{
+    display: flex;
+    justify-content: center;
+}
+.tab-scroll{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
