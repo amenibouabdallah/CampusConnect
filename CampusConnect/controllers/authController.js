@@ -309,7 +309,7 @@ const confirmCode = async (req,res) => {
           // Assuming user.typeAccount represents the type of the account
           let redirectPath = '/admin/users'; // default redirect path
           if ((user.userType === 'student') || (user.userType === 'teacher')) {
-              redirectPath = '/profile';
+              redirectPath = '/docs';
           }
   
           // JWT token generation

@@ -89,6 +89,9 @@ a.nav.active::after {
         height: 24px;
         width: 24px;
     }
+    .log-mobile{
+        display: none !important;
+    }
 
     .bar {
         width: 100%;

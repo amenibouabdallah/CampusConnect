@@ -53,8 +53,10 @@ function UploadFileAdmin() {
                 }
             });
             console.log(response);
+            setShowMessage(true);
         }catch(error){
             console.log(error);
+            setShowAlert(true);
 
         }
 
